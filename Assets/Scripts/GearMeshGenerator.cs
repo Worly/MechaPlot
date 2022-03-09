@@ -8,10 +8,10 @@ using UnityEngine;
 public class GearMeshGenerator : MonoBehaviour
 {
     [SerializeField]
-    private float diameter;
+    public float circumference;
 
     [SerializeField]
-    public float innerDiameter = 2;
+    public float innerCircumference = 2;
 
     [SerializeField]
     public float toothWidth = 0.5f;
@@ -32,21 +32,21 @@ public class GearMeshGenerator : MonoBehaviour
     {
         var meshFilter = GetComponent<MeshFilter>();
 
-        if (diameter <= innerDiameter)
+        if (circumference <= innerCircumference)
         {
-            Debug.LogError("Diameter must be greater than inner diameter");
+            Debug.LogError("Circumference must be greater than inner circumference");
 
             meshFilter.mesh = new Mesh();
 
             return;
         }
 
-        var outerRadius = diameter / (2 * Mathf.PI);
-        var innerRadius = innerDiameter / (2 * Mathf.PI);
+        var outerRadius = circumference / (2 * Mathf.PI);
+        var innerRadius = innerCircumference / (2 * Mathf.PI);
 
         var mesh = new Mesh();
 
-        var circleVertexCount = (int)Mathf.Round(diameter / toothWidth);
+        var circleVertexCount = (int)Mathf.Round(circumference / toothWidth);
 
         var leftSideTriangles = GenerateSide(outerRadius, innerRadius, circleVertexCount, -thickness / 2f, -1, out List<Vertex> outerLeftCircle, out List<Vertex> innerLeftCircle);
         var rightSideTriangles = GenerateSide(outerRadius, innerRadius, circleVertexCount, thickness / 2f, 1, out List<Vertex> outerRightCircle, out List<Vertex> innerRightCircle);
