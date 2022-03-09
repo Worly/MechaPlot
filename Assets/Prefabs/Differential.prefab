@@ -227,7 +227,6 @@ GameObject:
   - component: {fileID: 5315554035087468660}
   - component: {fileID: 5315554035087468619}
   - component: {fileID: 5315554035087468618}
-  - component: {fileID: 5315554035087468661}
   m_Layer: 0
   m_Name: SpiderCube
   m_TagString: Untagged
@@ -298,19 +297,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5315554035087468661
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5315554035087468663}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5315554035503477255
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,8 +306,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5315554035503477252}
-  - component: {fileID: 5315554035503477275}
-  - component: {fileID: 5315554035503477274}
   m_Layer: 0
   m_Name: Spider
   m_TagString: Untagged
@@ -348,55 +332,6 @@ Transform:
   m_Father: {fileID: 427965876311938393}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!33 &5315554035503477275
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5315554035503477255}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &5315554035503477274
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5315554035503477255}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &4533515681167277007
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -866,11 +801,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
---- !u!4 &427965874765427236 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5491247532521032999, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
-  m_PrefabInstance: {fileID: 5315554035137904387}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5315554034669451700 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 605292215, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
@@ -882,6 +812,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bf7312ec6fdf9942b08c82ddb2ffb77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &427965874765427236 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5491247532521032999, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+  m_PrefabInstance: {fileID: 5315554035137904387}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5315554035440504989
 PrefabInstance:
   m_ObjectHideFlags: 0
