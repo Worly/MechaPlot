@@ -41,6 +41,9 @@ public class ValuedComponent : MonoBehaviour
     }
 
     [SerializeField]
+    public bool onlyCopyInput;
+
+    [SerializeField]
     public UnityEvent valueChanged;
 
     public virtual void Start()
@@ -60,6 +63,9 @@ public class ValuedComponent : MonoBehaviour
 
     private void UpdateValueFromInput()
     {
-        this.Value = -this.inputComponent.Value * this.inputComponent.DistancePerValue() / DistancePerValue();
+        if (this.onlyCopyInput)
+            this.Value = this.inputComponent.value;
+        else
+            this.Value = -this.inputComponent.Value * this.inputComponent.DistancePerValue() / DistancePerValue();
     }
 }
