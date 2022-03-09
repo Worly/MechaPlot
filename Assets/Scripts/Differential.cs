@@ -27,8 +27,8 @@ public class Differential : MonoBehaviour
 
     public void UpdateValues()
     {
-        outputGear.Value = (-endGear1.Value - endGear2.Value) / 2f;
-        spiderGear1.Value = (endGear1.Value - endGear2.Value) / 2f;
-        spiderGear2.Value = (endGear1.Value - endGear2.Value) / 2f;
+        outputGear.Value = (endGear1.Value + endGear2.Value) / 2f;
+        spiderGear1.Value = (-endGear1.Value + endGear2.Value) / 2f;
+        spiderGear2.Value = (-endGear1.Value + endGear2.Value) / 2f;
     }
 }
