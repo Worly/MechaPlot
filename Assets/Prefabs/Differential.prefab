@@ -352,6 +352,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5753021866736356058}
     - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: gearType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: thickness
       value: 0.8
       objectReference: {fileID: 0}
@@ -370,6 +374,18 @@ PrefabInstance:
     - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: innerCircumference
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2816450430591232590, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9959944
+      objectReference: {fileID: 0}
+    - target: {fileID: 2816450430591232590, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.08941578
+      objectReference: {fileID: 0}
+    - target: {fileID: 2816450430591232590, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 10.26
       objectReference: {fileID: 0}
     - target: {fileID: 4696207782343684778, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: m_Name
@@ -536,6 +552,10 @@ PrefabInstance:
     - target: {fileID: 605292215, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: circumference
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: gearType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: thickness
@@ -728,6 +748,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: gearType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: thickness
       value: 0.8
       objectReference: {fileID: 0}
@@ -836,6 +860,10 @@ PrefabInstance:
       propertyPath: inputComponent
       value: 
       objectReference: {fileID: 5315554034527432998}
+    - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: gearType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: thickness
       value: 0.8

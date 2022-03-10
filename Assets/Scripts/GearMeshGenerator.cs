@@ -28,6 +28,9 @@ public class GearMeshGenerator : MonoBehaviour
     [SerializeField]
     public float thickness = 1;
 
+    [SerializeField]
+    public GearType gearType = GearType.Spur;
+
     public void GenerateMesh()
     {
         var meshFilter = GetComponent<MeshFilter>();
@@ -42,14 +45,29 @@ public class GearMeshGenerator : MonoBehaviour
         }
 
         var outerRadius = circumference / (2 * Mathf.PI);
+
+        float outerRadiusLeft = 0, outerRadiusRight = 0;
+        if (gearType == GearType.Spur)
+            outerRadiusLeft = outerRadiusRight = outerRadius;
+        else if (gearType == GearType.BevelLeft)
+        {
+            outerRadiusLeft = outerRadius - thickness / 2f;
+            outerRadiusRight = outerRadius + thickness / 2f;
+        }
+        else if (gearType == GearType.BevelRight)
+        {
+            outerRadiusLeft = outerRadius + thickness / 2f;
+            outerRadiusRight = outerRadius - thickness / 2f;
+        }
+
         var innerRadius = innerCircumference / (2 * Mathf.PI);
 
         var mesh = new Mesh();
 
         var circleVertexCount = (int)Mathf.Round(circumference / toothWidth);
 
-        var leftSideTriangles = GenerateSide(outerRadius, innerRadius, circleVertexCount, -thickness / 2f, -1, out List<Vertex> outerLeftCircle, out List<Vertex> innerLeftCircle);
-        var rightSideTriangles = GenerateSide(outerRadius, innerRadius, circleVertexCount, thickness / 2f, 1, out List<Vertex> outerRightCircle, out List<Vertex> innerRightCircle);
+        var leftSideTriangles = GenerateSide(outerRadiusLeft, innerRadius, circleVertexCount, -thickness / 2f, -1, out List<Vertex> outerLeftCircle, out List<Vertex> innerLeftCircle);
+        var rightSideTriangles = GenerateSide(outerRadiusRight, innerRadius, circleVertexCount, thickness / 2f, 1, out List<Vertex> outerRightCircle, out List<Vertex> innerRightCircle);
 
         innerLeftCircle.Reverse(1, innerLeftCircle.Count - 1);
         outerRightCircle.Reverse(1, outerRightCircle.Count - 1);
@@ -290,4 +308,11 @@ public class GearMeshGenerator : MonoBehaviour
             triangles = this.triangles.SelectMany(t => t.Vertices.Select(v => vertexList.IndexOf(v))).ToArray();
         }
     }
+}
+
+public enum GearType
+{
+    Spur,
+    BevelLeft,
+    BevelRight
 }
