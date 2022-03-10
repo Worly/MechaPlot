@@ -472,6 +472,10 @@ PrefabInstance:
       propertyPath: circumference
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 1802221400316136720, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: circumference
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 4696207782343684778, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: m_Name
       value: OutputGear
