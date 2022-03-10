@@ -283,6 +283,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 605292215, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+      propertyPath: circumference
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 4696207782343684778, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: m_Name
       value: CrankGear
@@ -293,15 +297,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5491247532521032999, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -5.58
       objectReference: {fileID: 0}
     - target: {fileID: 5491247532521032999, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 8.37
       objectReference: {fileID: 0}
     - target: {fileID: 5491247532521032999, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -9.23
       objectReference: {fileID: 0}
     - target: {fileID: 5491247532521032999, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
       propertyPath: m_LocalRotation.w
@@ -371,4 +375,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gear: {fileID: 6950626248361011751}
-  crankSpeed: 90
+  crankSpeed: 25.37

@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 0
   inputComponent: {fileID: 0}
+  onlyCopyInput: 0
   valueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -111,7 +112,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: fd2f5a0878a43e2478c5cb25b61d666a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -152,3 +153,4 @@ MonoBehaviour:
   toothPitchStartFraction: 0.5
   toothPitchFraction: 0.2
   thickness: 1
+  gearType: 0
