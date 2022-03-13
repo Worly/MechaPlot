@@ -59,7 +59,7 @@ public class MeshBuilder
             };
 
             if (copyVertices)
-                quadVertices = quadVertices.Select(o => new Vertex(o.Vector3)).ToList();
+                quadVertices = quadVertices.Select(o => o.Duplicate()).ToList();
 
             triangles.AddRange(MakeQuad(quadVertices));
         }
@@ -69,12 +69,66 @@ public class MeshBuilder
         return triangles;
     }
 
-    public List<Triangle> MakeQuad(List<Vertex> vertices)
+    public List<Vertex> GenerateLine(int vertexCount, float length, float xValue, float zValue, int direction)
+    {
+        var result = new List<Vertex>();
+
+        Debug.Log(vertexCount);
+
+        for (int i = 0; i < vertexCount; i++)
+        {
+            var yValue = direction * (length / (vertexCount - 1) * i - length / 2f);
+            Debug.Log(direction * (length / (vertexCount - 1) * i - length / 2f));
+
+            var vertex = new Vertex
+            (
+                x: xValue,
+                y: yValue,
+                z: zValue
+            );
+            result.Add(vertex);
+        }
+
+        return result;
+    }
+
+    public List<Triangle> MakeLineBridge(List<Vertex> line1, List<Vertex> line2, bool copyVertices)
+    {
+        if (line1.Count != line2.Count)
+            throw new ArgumentException("Line1 vertex count must be same as line2 vertex count");
+
+        var triangles = new List<Triangle>();
+
+        for (int i = 0; i < line1.Count - 1; i++)
+        {
+            var quadVertices = new List<Vertex>()
+            {
+                line1[i],
+                line1[i + 1],
+                line2[i + 1],
+                line2[i]
+            };
+
+            if (copyVertices)
+                quadVertices = quadVertices.Select(o => o.Duplicate()).ToList();
+
+            triangles.AddRange(MakeQuad(quadVertices));
+        }
+
+        AddTriangles(triangles);
+
+        return triangles;
+    }
+
+    public List<Triangle> MakeQuad(List<Vertex> vertices, bool copyVertices = false)
     {
         if (vertices.Count != 4)
             throw new ArgumentException("Quad must have exactly 4 vertices");
 
         var triangles = new List<Triangle>();
+
+        if (copyVertices)
+            vertices = vertices.Select(o => o.Duplicate()).ToList();
 
         triangles.Add(new Triangle(vertices[0], vertices[1], vertices[2]));
         triangles.Add(new Triangle(vertices[2], vertices[3], vertices[0]));
@@ -123,6 +177,11 @@ public class Vertex
     public Vertex(float x, float y, float z)
     {
         Vector3 = new Vector3(x, y, z);
+    }
+
+    public Vertex Duplicate()
+    {
+        return new Vertex(Vector3);
     }
 }
 
