@@ -78,7 +78,7 @@ public class RackMeshGenerator : MonoBehaviour
         meshBuilder.MakeLineBridge(newCircle1Vertices, newCircle2Vertices, copyVertices: true);
     }
 
-    private List<Vertex> GenerateTeethVertices(MeshBuilder meshBuilder, List<Vertex> circle, out List<Triangle> triangles)
+    private List<Vertex> GenerateTeethVertices(MeshBuilder meshBuilder, List<Vertex> line, out List<Triangle> triangles)
     {
         var newVertices = new List<Vertex>();
 
@@ -86,38 +86,18 @@ public class RackMeshGenerator : MonoBehaviour
 
         var toothDirection = new Vector3(1, 0, 0);
 
-        for (int i = 0; i < circle.Count; i++)
+        for (int i = 0; i < line.Count - 1; i++)
         {
             // generate tooth
             if (i % 2 == 0)
             {
-                var firstVertex = circle[i];
-                var sixthVertex = circle[(i + 1) % circle.Count];
+                var firstVertex = line[i];
+                var lastVertex = line[i + 1];
 
-                var pitchingVector = sixthVertex.Vector3 - firstVertex.Vector3;
+                var toothVertices = meshBuilder.MakeTooth(firstVertex, lastVertex, toothDirection, toothDirection, out List<Triangle> toothTriangles, toothHeight, toothPitchStartFraction, toothPitchFraction);
 
-                newVertices.Add(firstVertex);
-
-                var newPos = toothDirection * toothHeight * toothPitchStartFraction + firstVertex.Vector3;
-                var secondVertex = new Vertex(newPos.x, newPos.y, firstVertex.Vector3.z);
-                newVertices.Add(secondVertex);
-
-                newPos = toothDirection * toothHeight + firstVertex.Vector3 + pitchingVector * toothPitchFraction;
-                var thirdVertex = new Vertex(newPos.x, newPos.y, firstVertex.Vector3.z);
-                newVertices.Add(thirdVertex);
-
-                newPos = toothDirection * toothHeight + sixthVertex.Vector3 - pitchingVector * toothPitchFraction;
-                var fourthVector = new Vertex(newPos.x, newPos.y, firstVertex.Vector3.z);
-                newVertices.Add(fourthVector);
-
-                newPos = toothDirection * toothHeight * toothPitchStartFraction + sixthVertex.Vector3;
-                var fifthVertex = new Vertex(newPos.x, newPos.y, sixthVertex.Vector3.z);
-                newVertices.Add(fifthVertex);
-
-                newVertices.Add(sixthVertex);
-
-                triangles.AddRange(meshBuilder.MakeQuad(new List<Vertex>() { secondVertex, thirdVertex, fourthVector, fifthVertex }));
-                triangles.AddRange(meshBuilder.MakeQuad(new List<Vertex>() { firstVertex, secondVertex, fifthVertex, sixthVertex }));
+                newVertices.AddRange(toothVertices);
+                triangles.AddRange(toothTriangles);
             }
         }
 

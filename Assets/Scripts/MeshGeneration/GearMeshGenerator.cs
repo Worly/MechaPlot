@@ -117,32 +117,12 @@ public class GearMeshGenerator : MonoBehaviour
             if (i % 2 == 0)
             {
                 var firstVertex = circle[i];
-                var sixthVertex = circle[(i + 1) % circle.Count];
+                var lastVertex = circle[(i + 1) % circle.Count];
 
-                var pitchingVector = sixthVertex.Vector3 - firstVertex.Vector3;
+                var toothVertices = meshBuilder.MakeTooth(firstVertex, lastVertex, firstVertex.Vector3.normalized, lastVertex.Vector3.normalized, out List<Triangle> toothTriangles, toothHeight, toothPitchStartFraction, toothPitchFraction);
 
-                newVertices.Add(firstVertex);
-
-                var newPos = firstVertex.Vector3.normalized * toothHeight * toothPitchStartFraction + firstVertex.Vector3;
-                var secondVertex = new Vertex(newPos.x, newPos.y, firstVertex.Vector3.z);
-                newVertices.Add(secondVertex);
-
-                newPos = firstVertex.Vector3.normalized * toothHeight + firstVertex.Vector3 + pitchingVector * toothPitchFraction;
-                var thirdVertex = new Vertex(newPos.x, newPos.y, firstVertex.Vector3.z);
-                newVertices.Add(thirdVertex);
-
-                newPos = sixthVertex.Vector3.normalized * toothHeight + sixthVertex.Vector3 - pitchingVector * toothPitchFraction;
-                var fourthVector = new Vertex(newPos.x, newPos.y, firstVertex.Vector3.z);
-                newVertices.Add(fourthVector);
-
-                newPos = sixthVertex.Vector3.normalized * toothHeight * toothPitchStartFraction + sixthVertex.Vector3;
-                var fifthVertex = new Vertex(newPos.x, newPos.y, sixthVertex.Vector3.z);
-                newVertices.Add(fifthVertex);
-
-                newVertices.Add(sixthVertex);
-
-                triangles.AddRange(meshBuilder.MakeQuad(new List<Vertex>() { secondVertex, thirdVertex, fourthVector, fifthVertex }));
-                triangles.AddRange(meshBuilder.MakeQuad(new List<Vertex>() { firstVertex, secondVertex, fifthVertex, sixthVertex }));
+                newVertices.AddRange(toothVertices);
+                triangles.AddRange(toothTriangles);
             }
         }
 
