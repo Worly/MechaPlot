@@ -20,12 +20,6 @@ public class RackMeshGenerator : MonoBehaviour
     public float toothHeight = 0.8f;
 
     [SerializeField]
-    public float toothPitchStartFraction = 0.5f;
-
-    [SerializeField]
-    public float toothPitchFraction = 0.2f;
-
-    [SerializeField]
     public float thickness = 1;
 
     public void GenerateMesh()
@@ -94,7 +88,7 @@ public class RackMeshGenerator : MonoBehaviour
                 var firstVertex = line[i];
                 var lastVertex = line[i + 1];
 
-                var toothVertices = meshBuilder.MakeTooth(firstVertex, lastVertex, toothDirection, toothDirection, out List<Triangle> toothTriangles, toothHeight, toothPitchStartFraction, toothPitchFraction);
+                var toothVertices = meshBuilder.MakeTooth(firstVertex, lastVertex, toothDirection, toothDirection, out List<Triangle> toothTriangles, toothHeight);
 
                 newVertices.AddRange(toothVertices);
                 triangles.AddRange(toothTriangles);

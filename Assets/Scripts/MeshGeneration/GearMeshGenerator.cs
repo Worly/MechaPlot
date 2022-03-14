@@ -20,12 +20,6 @@ public class GearMeshGenerator : MonoBehaviour
     public float toothHeight = 0.8f;
 
     [SerializeField]
-    public float toothPitchStartFraction = 0.5f;
-
-    [SerializeField]
-    public float toothPitchFraction = 0.2f;
-
-    [SerializeField]
     public float thickness = 1;
 
     [SerializeField]
@@ -119,7 +113,7 @@ public class GearMeshGenerator : MonoBehaviour
                 var firstVertex = circle[i];
                 var lastVertex = circle[(i + 1) % circle.Count];
 
-                var toothVertices = meshBuilder.MakeTooth(firstVertex, lastVertex, firstVertex.Vector3.normalized, lastVertex.Vector3.normalized, out List<Triangle> toothTriangles, toothHeight, toothPitchStartFraction, toothPitchFraction);
+                var toothVertices = meshBuilder.MakeTooth(firstVertex, lastVertex, firstVertex.Vector3.normalized, lastVertex.Vector3.normalized, out List<Triangle> toothTriangles, toothHeight);
 
                 newVertices.AddRange(toothVertices);
                 triangles.AddRange(toothTriangles);
