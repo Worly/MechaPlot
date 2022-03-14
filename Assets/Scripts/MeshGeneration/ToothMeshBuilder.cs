@@ -17,7 +17,6 @@ public static class ToothMeshBuilder
         var pitchingVector = lastVertex.Vector3 - firstVertex.Vector3;
 
         newVertices.Add(firstVertex);
-        
 
         var newPos = firstToothDirection * toothHeight * PITCH_START_FRACTION + firstVertex.Vector3;
         var secondVertex = new Vertex(newPos.x, newPos.y, firstVertex.Vector3.z);

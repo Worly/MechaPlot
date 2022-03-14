@@ -73,12 +73,9 @@ public class MeshBuilder
     {
         var result = new List<Vertex>();
 
-        Debug.Log(vertexCount);
-
         for (int i = 0; i < vertexCount; i++)
         {
             var yValue = direction * (length / (vertexCount - 1) * i - length / 2f);
-            Debug.Log(direction * (length / (vertexCount - 1) * i - length / 2f));
 
             var vertex = new Vertex
             (

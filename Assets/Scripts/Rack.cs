@@ -5,21 +5,8 @@ public class Rack : ValuedComponent
     [SerializeField]
     public RackMeshGenerator rackMeshGenerator;
 
-    [SerializeProperty("Length")]
+    [SerializeField]
     public float length;
-    public float Length
-    {
-        get => length;
-        set
-        {
-            if (this.length == value)
-                return;
-
-            this.length = value;
-            this.rackMeshGenerator.length = length;
-            this.rackMeshGenerator.GenerateMesh();
-        }
-    }
 
     private Vector3? startPosition;
 
@@ -27,10 +14,15 @@ public class Rack : ValuedComponent
     {
         base.Start();
 
-        this.rackMeshGenerator.length = length;
-        this.rackMeshGenerator.GenerateMesh();
+        GenerateMesh();
 
         this.startPosition = transform.localPosition;
+    }
+
+    public void GenerateMesh()
+    {
+        this.rackMeshGenerator.length = length;
+        this.rackMeshGenerator.GenerateMesh();
     }
 
     protected override void UpdateValueRender()
@@ -43,6 +35,6 @@ public class Rack : ValuedComponent
 
     public override float DistancePerValue()
     {
-        return 0.98f;
+        return 1;
     }
 }

@@ -5,21 +5,8 @@ public class Gear : ValuedComponent
     [SerializeField]
     public GearMeshGenerator gearMeshGenerator;
 
-    [SerializeProperty("Circumference")]
+    [SerializeField]
     public float circumference;
-    public float Circumference
-    {
-        get => circumference;
-        set
-        {
-            if (this.circumference == value)
-                return;
-
-            this.circumference = value;
-            this.gearMeshGenerator.circumference = circumference;
-            this.gearMeshGenerator.GenerateMesh();
-        }
-    }
 
     private Quaternion? startRotation;
 
@@ -27,10 +14,15 @@ public class Gear : ValuedComponent
     {
         base.Start();
 
-        this.gearMeshGenerator.circumference = circumference;
-        this.gearMeshGenerator.GenerateMesh();
+        this.GenerateMesh();
 
         this.startRotation = transform.localRotation;
+    }
+
+    public void GenerateMesh()
+    {
+        this.gearMeshGenerator.circumference = circumference;
+        this.gearMeshGenerator.GenerateMesh();
     }
 
     protected override void UpdateValueRender()
