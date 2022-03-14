@@ -38,13 +38,13 @@ public class RackMeshGenerator : MonoBehaviour
 
         meshBuilder.MakeLineBridge(innerRightEdge, innerLeftEdge, copyVertices: true);
 
-        meshBuilder.MakeQuad(new List<Vertex>() { innerLeftEdge.First(), outerLeftEdge.Last(), outerRightEdge.Last(), innerRightEdge.First() }, true);
-        meshBuilder.MakeQuad(new List<Vertex>() { innerRightEdge.Last(), outerRightEdge.First(), outerLeftEdge.First(), innerLeftEdge.Last() }, true);
-
         if (vertexCount % 2 == 0)
             GenerateTeeth(meshBuilder, outerRightEdge, outerLeftEdge);
         else
             Debug.LogError("length / toothWidth must be divisible by 2 to generate teeth");
+
+        meshBuilder.MakeQuad(new List<Vertex>() { innerLeftEdge.First(), outerLeftEdge.Last(), outerRightEdge.Last(), innerRightEdge.First() }, true);
+        meshBuilder.MakeQuad(new List<Vertex>() { innerRightEdge.Last(), outerRightEdge.First(), outerLeftEdge.First(), innerLeftEdge.Last() }, true);
 
         meshFilter.mesh = meshBuilder.Build();
     }

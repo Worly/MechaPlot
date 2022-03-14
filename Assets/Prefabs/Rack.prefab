@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6605454593276680058}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.03, y: 8.02, z: 0.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6605454594740913649}
@@ -97,9 +97,7 @@ MonoBehaviour:
   length: 10
   width: 2
   toothWidth: 0.5
-  toothHeight: 0.8
-  toothPitchStartFraction: 0.5
-  toothPitchFraction: 0.2
+  toothHeight: 0.5
   thickness: 1
 --- !u!1 &6605454594740913650
 GameObject:
@@ -110,6 +108,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6605454594740913649}
+  - component: {fileID: 988038118}
   m_Layer: 0
   m_Name: Rack
   m_TagString: Untagged
@@ -132,3 +131,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &988038118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6605454594740913650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf12f72cc78dcc444bb8172978a5e807, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0
+  inputComponent: {fileID: 0}
+  onlyCopyInput: 0
+  valueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  rackMeshGenerator: {fileID: 6605454593276680056}
+  length: 30
