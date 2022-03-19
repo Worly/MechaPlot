@@ -30,7 +30,7 @@ public class Rack : ValuedComponent
         if (this.startPosition == null)
             this.startPosition = transform.localPosition;
 
-        transform.localPosition = this.startPosition.Value + new Vector3(0, Value, 0);
+        transform.localPosition = this.startPosition.Value + transform.up * Value;
     }
 
     public override float DistancePerValue()
