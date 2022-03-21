@@ -8,15 +8,11 @@ public class Rack : ValuedComponent
     [SerializeField]
     public float length;
 
-    private Vector3? startPosition;
-
     public override void Start()
     {
         base.Start();
 
         GenerateMesh();
-
-        this.startPosition = transform.localPosition;
     }
 
     public void GenerateMesh()
@@ -30,11 +26,16 @@ public class Rack : ValuedComponent
         if (this.startPosition == null)
             this.startPosition = transform.localPosition;
 
-        transform.localPosition = this.startPosition.Value + transform.up * Value;
+        transform.localPosition = this.startPosition + transform.up * Value;
     }
 
     public override float DistancePerValue()
     {
         return 1;
+    }
+
+    public override Vector3 GetLeftEdgePosition()
+    {
+        return this.transform.position - this.transform.right * (rackMeshGenerator.width / 2f + rackMeshGenerator.toothWidth / 2f);
     }
 }

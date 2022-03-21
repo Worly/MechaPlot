@@ -26,7 +26,8 @@ public class ValuedComponent : MonoBehaviour
     public ValuedComponent InputComponent
     {
         get => inputComponent;
-        set {
+        set
+        {
             if (this.inputComponent == value)
                 return;
 
@@ -44,12 +45,24 @@ public class ValuedComponent : MonoBehaviour
     public bool onlyCopyInput;
 
     [SerializeField]
+    public bool placeOnInput;
+
+    [SerializeField]
     public UnityEvent valueChanged;
+
+    protected Vector3 startPosition;
+    protected Quaternion startRotation;
 
     public virtual void Start()
     {
+        this.startPosition = this.transform.localPosition;
+        this.startRotation = this.transform.localRotation;
+    
         if (this.inputComponent != null)
             this.inputComponent.valueChanged.AddListener(UpdateValueFromInput);
+
+        if (this.placeOnInput && this.inputComponent != null)
+            this.PlaceOnInput();
     }
 
     protected virtual void UpdateValueRender()
@@ -67,5 +80,43 @@ public class ValuedComponent : MonoBehaviour
             this.Value = this.inputComponent.value;
         else
             this.Value = -this.inputComponent.Value * this.inputComponent.DistancePerValue() / DistancePerValue();
+    }
+
+    public virtual Vector3 GetLeftEdgePosition()
+    {
+        return this.transform.position;
+    }
+
+    public Vector3 GetPositionToPlaceOnInput()
+    {
+        if (inputComponent == null)
+            return Vector3.zero;
+
+
+        var inputEdgePosition = inputComponent.GetLeftEdgePosition();
+
+        var myEdgePosition = GetLeftEdgePosition();
+        var myOffset = myEdgePosition - this.transform.position;
+
+        return inputEdgePosition + myOffset;
+    }
+
+    public void PlaceOnInput()
+    {
+        if (inputComponent == null)
+            return;
+
+        var positionToPlaceOn = GetPositionToPlaceOnInput();
+
+        Vector3 localPosition;
+        if (this.transform.parent != null)
+            localPosition = this.transform.parent.InverseTransformPoint(positionToPlaceOn);
+        else
+            localPosition = positionToPlaceOn;
+
+        this.startPosition = localPosition;
+
+        this.transform.localPosition = this.startPosition;
+        UpdateValueRender();
     }
 }

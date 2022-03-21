@@ -8,15 +8,11 @@ public class Gear : ValuedComponent
     [SerializeField]
     public float circumference;
 
-    private Quaternion? startRotation;
-
     public override void Start()
     {
         base.Start();
 
         this.GenerateMesh();
-
-        this.startRotation = transform.localRotation;
     }
 
     public void GenerateMesh()
@@ -30,11 +26,18 @@ public class Gear : ValuedComponent
         if (this.startRotation == null)
             this.startRotation = transform.localRotation;
 
-        transform.localRotation = this.startRotation.Value * Quaternion.Euler(0, 0, Value);
+        transform.localRotation = this.startRotation * Quaternion.Euler(0, 0, Value);
     }
 
     public override float DistancePerValue()
     {
         return this.circumference / 360;
+    }
+
+    public override Vector3 GetLeftEdgePosition()
+    {
+        var radius = this.circumference / (2 * Mathf.PI);
+        var right = Vector3.Cross(Vector3.up, transform.forward);
+        return this.transform.position - right * (radius + this.gearMeshGenerator.toothHeight / 2);
     }
 }
