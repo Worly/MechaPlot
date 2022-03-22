@@ -32,12 +32,18 @@ public class ValuedComponent : MonoBehaviour
                 return;
 
             if (this.inputComponent != null)
-                this.inputComponent.valueChanged.RemoveListener(UpdateValueFromInput);
+            {
+                this.inputComponent.valueChanged.RemoveListener(OnInputComponentValueChanged);
+                this.inputComponent.positionChanged.RemoveListener(OnInputComponentPositionChanged);
+            }
 
             this.inputComponent = value;
 
             if (this.inputComponent != null)
-                this.inputComponent.valueChanged.AddListener(UpdateValueFromInput);
+            {
+                this.inputComponent.valueChanged.AddListener(OnInputComponentValueChanged);
+                this.inputComponent.positionChanged.AddListener(OnInputComponentPositionChanged);
+            }
         }
     }
 
@@ -47,22 +53,38 @@ public class ValuedComponent : MonoBehaviour
     [SerializeField]
     public bool placeOnInput;
 
-    [SerializeField]
+    [HideInInspector]
     public UnityEvent valueChanged;
+    [HideInInspector]
+    public UnityEvent positionChanged;
+
+    private Vector3 _lastFrameStartPosition;
 
     protected Vector3 startPosition;
     protected Quaternion startRotation;
 
     public virtual void Start()
     {
-        this.startPosition = this.transform.localPosition;
-        this.startRotation = this.transform.localRotation;
-    
+        this.startPosition = this.transform.position;
+        this.startRotation = this.transform.rotation;
+
         if (this.inputComponent != null)
-            this.inputComponent.valueChanged.AddListener(UpdateValueFromInput);
+        {
+            this.inputComponent.valueChanged.AddListener(OnInputComponentValueChanged);
+            this.inputComponent.positionChanged.AddListener(OnInputComponentPositionChanged);
+        }
 
         if (this.placeOnInput && this.inputComponent != null)
             this.PlaceOnInput();
+    }
+
+    public virtual void Update()
+    {
+        if (_lastFrameStartPosition != startPosition)
+        {
+            this.positionChanged.Invoke();
+            _lastFrameStartPosition = startPosition;
+        }
     }
 
     protected virtual void UpdateValueRender()
@@ -74,12 +96,20 @@ public class ValuedComponent : MonoBehaviour
         return 1;
     }
 
-    private void UpdateValueFromInput()
+    public virtual ConnectionDirection GetConnectionDirection()
+    {
+        return ConnectionDirection.INVERSE;
+    }
+
+    private void OnInputComponentValueChanged()
     {
         if (this.onlyCopyInput)
             this.Value = this.inputComponent.value;
         else
-            this.Value = -this.inputComponent.Value * this.inputComponent.DistancePerValue() / DistancePerValue();
+        {
+
+            this.Value = (int)GetConnectionDirection() * this.inputComponent.Value * this.inputComponent.DistancePerValue() / DistancePerValue();
+        }
     }
 
     public virtual Vector3 GetLeftEdgePosition()
@@ -91,7 +121,6 @@ public class ValuedComponent : MonoBehaviour
     {
         if (inputComponent == null)
             return Vector3.zero;
-
 
         var inputEdgePosition = inputComponent.GetLeftEdgePosition();
 
@@ -106,17 +135,19 @@ public class ValuedComponent : MonoBehaviour
         if (inputComponent == null)
             return;
 
-        var positionToPlaceOn = GetPositionToPlaceOnInput();
-
-        Vector3 localPosition;
-        if (this.transform.parent != null)
-            localPosition = this.transform.parent.InverseTransformPoint(positionToPlaceOn);
-        else
-            localPosition = positionToPlaceOn;
-
-        this.startPosition = localPosition;
-
-        this.transform.localPosition = this.startPosition;
+        this.transform.position = this.startPosition = GetPositionToPlaceOnInput();
         UpdateValueRender();
+    }
+
+    private void OnInputComponentPositionChanged()
+    {
+        if (placeOnInput)
+            PlaceOnInput();
+    }
+
+    public enum ConnectionDirection : int
+    {
+        INVERSE = -1,
+        NORMAL = 1
     }
 }

@@ -24,9 +24,9 @@ public class Rack : ValuedComponent
     protected override void UpdateValueRender()
     {
         if (this.startPosition == null)
-            this.startPosition = transform.localPosition;
+            this.startPosition = transform.position;
 
-        transform.localPosition = this.startPosition + transform.up * Value;
+        transform.position = this.startPosition + transform.up * Value;
     }
 
     public override float DistancePerValue()

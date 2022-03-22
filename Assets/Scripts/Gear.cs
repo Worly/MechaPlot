@@ -24,14 +24,22 @@ public class Gear : ValuedComponent
     protected override void UpdateValueRender()
     {
         if (this.startRotation == null)
-            this.startRotation = transform.localRotation;
+            this.startRotation = transform.rotation;
 
-        transform.localRotation = this.startRotation * Quaternion.Euler(0, 0, Value);
+        transform.rotation = this.startRotation * Quaternion.AngleAxis(Value, Vector3.forward);
     }
 
     public override float DistancePerValue()
     {
         return this.circumference / 360;
+    }
+
+    public override ConnectionDirection GetConnectionDirection()
+    {
+        if (inputComponent is Gear gear && gear.gearMeshGenerator.gearType == GearType.Belt)
+            return ConnectionDirection.NORMAL;
+        else
+            return base.GetConnectionDirection();
     }
 
     public override Vector3 GetLeftEdgePosition()

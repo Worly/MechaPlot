@@ -41,7 +41,7 @@ public class GearMeshGenerator : MonoBehaviour
         var outerRadius = circumference / (2 * Mathf.PI);
 
         float outerRadiusLeft = 0, outerRadiusRight = 0;
-        if (gearType == GearType.Spur)
+        if (gearType == GearType.Spur || gearType == GearType.Belt)
             outerRadiusLeft = outerRadiusRight = outerRadius;
         else if (gearType == GearType.BevelLeft)
         {
@@ -68,7 +68,7 @@ public class GearMeshGenerator : MonoBehaviour
 
         meshBuilder.MakeCircleBridge(innerRightCircle, innerLeftCircle, copyVertices: true);
 
-        if (circleVertexCount % 2 == 0)
+        if (gearType != GearType.Belt && circleVertexCount % 2 == 0)
             GenerateTeeth(meshBuilder, outerRightCircle, outerLeftCircle);
         else
             meshBuilder.MakeCircleBridge(outerRightCircle, outerLeftCircle, copyVertices: true);
@@ -128,5 +128,6 @@ public enum GearType
 {
     Spur,
     BevelLeft,
-    BevelRight
+    BevelRight,
+    Belt
 }

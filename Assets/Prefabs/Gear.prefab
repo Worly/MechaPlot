@@ -47,7 +47,11 @@ MonoBehaviour:
   value: 0
   inputComponent: {fileID: 0}
   onlyCopyInput: 0
+  placeOnInput: 0
   valueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  positionChanged:
     m_PersistentCalls:
       m_Calls: []
   gearMeshGenerator: {fileID: 1802221400316136720}
@@ -150,7 +154,5 @@ MonoBehaviour:
   innerCircumference: 2
   toothWidth: 0.5
   toothHeight: 0.5
-  toothPitchStartFraction: 0.5
-  toothPitchFraction: 0.2
   thickness: 1
   gearType: 0
