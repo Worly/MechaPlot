@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Rope))]
-public class RopeEditor : Editor
+[CustomEditor(typeof(Gear), true)]
+public class GearEditor: Editor
 {
     public override void OnInspectorGUI()
     {
-        var rope = (Rope)target;
+        var gear = (Gear)target;
 
         base.DrawDefaultInspector();
 
-        if (GUILayout.Button("Generate"))
-            rope.Generate();
+        if (GUILayout.Button("GenerateMesh"))
+            gear.GenerateMesh();
     }
 }
