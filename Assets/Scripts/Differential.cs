@@ -4,20 +4,11 @@ using UnityEngine;
 
 public class Differential : MonoBehaviour
 {
-    [SerializeField]
-    public Gear endGear1;
-
-    [SerializeField]
-    public Gear endGear2;
-
-    [SerializeField]
-    public Gear spiderGear1;
-
-    [SerializeField]
-    public Gear spiderGear2;
-
-    [SerializeField]
-    public Gear outputGear;
+    [SerializeField] private Gear endGear1;
+    [SerializeField] private Gear endGear2;
+    [SerializeField] private Gear spiderGear1;
+    [SerializeField] private Gear spiderGear2;
+    [SerializeField] private Gear outputGear;
 
     public void Start()
     {

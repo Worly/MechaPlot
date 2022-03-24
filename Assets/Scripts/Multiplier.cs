@@ -4,26 +4,13 @@ using UnityEngine;
 
 public class Multiplier : MonoBehaviour
 {
-    [SerializeField]
-    public Rack inputRackWithPivot;
-
-    [SerializeField]
-    public Transform rackPivotArm;
-
-    [SerializeField]
-    public Transform rackPivot;
-
-    [SerializeField]
-    public Transform pivotPoint;
-
-    [SerializeField]
-    public Rack inputRack;
-
-    [SerializeField]
-    public Rack outputRack;
-
-    [SerializeField]
-    public Transform pin;
+    [SerializeField] private Rack inputRackWithPivot;
+    [SerializeField] private Transform rackPivotArm;
+    [SerializeField] private Transform rackPivot;
+    [SerializeField] private Transform pivotPoint;
+    [SerializeField] private Rack inputRack;
+    [SerializeField] private Rack outputRack;
+    [SerializeField] private Transform pin;
 
     private float kValue;
     private Vector3 rackPivotStartPosition;

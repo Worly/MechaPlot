@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class Gear : ValuedComponent
 {
-    [SerializeField]
-    public GearMeshGenerator gearMeshGenerator;
+    [SerializeField] private GearMeshGenerator gearMeshGenerator;
+    [SerializeField] private float circumference;
 
-    [SerializeField]
-    public float circumference;
+    public float Circumference { get => circumference; }
 
     public override void Start()
     {
@@ -36,7 +35,7 @@ public class Gear : ValuedComponent
 
     public override ConnectionDirection GetConnectionDirection()
     {
-        if (inputComponent is Gear gear && gear.gearMeshGenerator.gearType == GearType.Belt)
+        if (InputComponent is Gear gear && gear.gearMeshGenerator.gearType == GearType.Belt)
             return ConnectionDirection.NORMAL;
         else
             return base.GetConnectionDirection();

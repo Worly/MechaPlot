@@ -2,11 +2,8 @@ using UnityEngine;
 
 public class Rack : ValuedComponent
 {
-    [SerializeField]
-    public RackMeshGenerator rackMeshGenerator;
-
-    [SerializeField]
-    public float length;
+    [SerializeField] private RackMeshGenerator rackMeshGenerator;
+    [SerializeField] private float length;
 
     public override void Start()
     {

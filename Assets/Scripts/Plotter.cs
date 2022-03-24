@@ -4,14 +4,9 @@ using UnityEngine;
 
 public class Plotter : MonoBehaviour
 {
-    [SerializeField]
-    public LineRenderer lineRenderer;
-
-    [SerializeField]
-    public Transform penPoint;
-
-    [SerializeField]
-    public float drawPeriod;
+    [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private Transform penPoint;
+    [SerializeField] private float drawPeriod;
 
     public void Start()
     {

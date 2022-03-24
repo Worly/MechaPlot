@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class Crank : MonoBehaviour
 {
-    [SerializeField]
-    public Gear gear;
-
-    [SerializeField]
-    public float crankSpeed;
+    [SerializeField] private Gear gear;
+    [SerializeField] private float crankSpeed;
 
     void Update()
     {

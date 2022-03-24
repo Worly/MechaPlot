@@ -6,16 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class Rope : MonoBehaviour
 {
+    [SerializeField] private float lineSegmentLength = 0.1f;
+    [SerializeField] private Gear gear1;
+    [SerializeField] private Gear gear2;
+
     private LineRenderer lineRenderer;
-
-    [SerializeField]
-    public float lineSegmentLength = 0.1f;
-
-    [SerializeField]
-    public Gear gear1;
-
-    [SerializeField]
-    public Gear gear2;
 
     public void Awake()
     {
@@ -63,8 +58,8 @@ public class Rope : MonoBehaviour
             return;
         }
 
-        var gear1Radius = gear1.circumference / (2 * Mathf.PI) + lineRenderer.startWidth / 2f;
-        var gear2Radius = gear2.circumference / (2 * Mathf.PI) + lineRenderer.startWidth / 2f;
+        var gear1Radius = gear1.Circumference / (2 * Mathf.PI) + lineRenderer.startWidth / 2f;
+        var gear2Radius = gear2.Circumference / (2 * Mathf.PI) + lineRenderer.startWidth / 2f;
 
         var distance = Vector3.Distance(gear1.transform.position, gear2.transform.position);
 

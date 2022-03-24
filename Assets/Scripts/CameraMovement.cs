@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField]
-    public float movementSpeed;
-
-    [SerializeField]
-    public float mouseSensitivity;
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private float mouseSensitivity;
 
     private float yaw = 0.0f;
     private float pitch = 0.0f;

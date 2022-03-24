@@ -5,8 +5,7 @@ using UnityEngine.Events;
 
 public class ValuedComponent : MonoBehaviour
 {
-    [SerializeProperty("Value")]
-    public float value;
+    private float value;
     public float Value
     {
         get => value;
@@ -21,8 +20,7 @@ public class ValuedComponent : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    public ValuedComponent inputComponent;
+    [SerializeField] private ValuedComponent inputComponent;
     public ValuedComponent InputComponent
     {
         get => inputComponent;
@@ -47,16 +45,13 @@ public class ValuedComponent : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    public bool onlyCopyInput;
+    [SerializeField] protected bool onlyCopyInput;
+    [SerializeField] protected bool placeOnInput;
 
-    [SerializeField]
-    public bool placeOnInput;
 
-    [HideInInspector]
-    public UnityEvent valueChanged;
-    [HideInInspector]
-    public UnityEvent positionChanged;
+    [HideInInspector] public UnityEvent valueChanged;
+    [HideInInspector] public UnityEvent positionChanged;
+
 
     private Vector3 _lastFrameStartPosition;
 
