@@ -46,34 +46,20 @@ public class ValuedComponent : MonoBehaviour
 
     [SerializeField] public bool onlyCopyInput;
 
-
     [HideInInspector] public UnityEvent valueChanged;
-    [HideInInspector] public UnityEvent positionChanged;
-
-
-    private Vector3 _lastFrameStartPosition;
 
     protected Vector3 startPosition;
     protected Quaternion startRotation;
 
     public virtual void Start()
     {
-        this.startPosition = this.transform.position;
+        this.startPosition = this.transform.localPosition;
         this.startRotation = this.transform.localRotation;
 
         if (this.inputComponent != null)
         {
             this.inputComponent.valueChanged.AddListener(OnInputComponentValueChanged);
             UpdateValue();
-        }
-    }
-
-    public virtual void Update()
-    {
-        if (_lastFrameStartPosition != startPosition)
-        {
-            this.positionChanged.Invoke();
-            _lastFrameStartPosition = startPosition;
         }
     }
 
@@ -107,10 +93,15 @@ public class ValuedComponent : MonoBehaviour
             this.Value = (int)GetConnectionDirection() * this.inputComponent.Value * this.inputComponent.DistancePerValue() / DistancePerValue();
     }
 
-    public void SetPosition(Vector3 localPosition)
+    public void SetPositionLocal(Vector3 localPosition)
     {
-        this.transform.localPosition = localPosition;
-        this.startPosition = this.transform.position;
+        this.startPosition = this.transform.localPosition = localPosition;
+    }
+
+    public void SetPositionGlobal(Vector3 position)
+    {
+        this.transform.position = position;
+        this.startPosition = this.transform.localPosition;
     }
 
     public enum ConnectionDirection : int

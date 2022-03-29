@@ -21,13 +21,20 @@ public class Rack : ValuedComponent
     protected override void UpdateValueRender()
     {
         if (this.startPosition == null)
-            this.startPosition = transform.position;
+            this.startPosition = transform.localPosition;
 
-        transform.position = this.startPosition + transform.up * Value;
+        transform.localPosition = this.startPosition + transform.up * Value;
     }
 
     public override float DistancePerValue()
     {
         return 1;
+    }
+
+    public Vector3 GetPositionOfEdge(Vector3 direction)
+    {
+        var globalPosition = this.transform.TransformPoint(this.startPosition);
+
+        return globalPosition + direction * (rackMeshGenerator.width / 2f);
     }
 }

@@ -813,8 +813,8 @@ MonoBehaviour:
   endGear2: {fileID: 4533515681638350200}
   spiderGear1: {fileID: 5315554034669451700}
   spiderGear2: {fileID: 5315554034408907739}
-  inputGear1: {fileID: 5315554034527432998}
-  inputGear2: {fileID: 5753021866736356058}
+  inputGear1: {fileID: 5753021866736356058}
+  inputGear2: {fileID: 5315554034527432998}
   outputGear: {fileID: 5315554034054323913}
   correctOutputGear: {fileID: 7303022817697950464}
 --- !u!1 &5315554033827538559

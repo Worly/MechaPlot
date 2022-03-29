@@ -64,7 +64,8 @@ public class Gear : ValuedComponent
     public void PlaceOn(Vector3 position, Vector3 direction)
     {
         var myOffset = GetPositionOfEdge(direction) - this.transform.position;
-        this.transform.position = this.startPosition = position - myOffset; 
+        this.transform.position = position - myOffset;
+        this.startPosition = this.transform.localPosition;
     }
 
     public void PlaceOn(Gear gear, Vector3 direction)
@@ -98,7 +99,33 @@ public class Gear : ValuedComponent
             return;
         }
 
-        this.transform.position = this.startPosition = gear.transform.position + direction.normalized * (this.gearMeshGenerator.thickness / 2f + gear.gearMeshGenerator.thickness / 2f);
+        this.transform.position = gear.transform.position + direction.normalized * (this.gearMeshGenerator.thickness / 2f + gear.gearMeshGenerator.thickness / 2f);
+        this.startPosition = this.transform.localPosition;
         this.gearMeshGenerator.innerCircumference = gear.gearMeshGenerator.innerCircumference;
+    }
+
+    public void PlaceOn(Rack rack, Vector3 direction)
+    {
+        if (this.transform.forward != rack.transform.forward)
+        {
+            Debug.LogError("Gear and a rack must face the same direction!");
+            return;
+        }
+
+        if (Vector3.Dot(transform.forward, direction) > 0.001)
+        {
+            Debug.LogError("Direction must be perpendicular to rotation of the gear (tranform.forward)");
+            return;
+        }
+
+        this.PlaceOn(rack.GetPositionOfEdge(direction), -direction);
+    }
+
+    public void PlaceOn(ValuedComponent valuedComponent, Vector3 direction)
+    {
+        if (valuedComponent is Gear gear)
+            PlaceOn(gear, direction);
+        else if (valuedComponent is Rack rack)
+            PlaceOn(rack, direction);
     }
 }

@@ -7,11 +7,18 @@ public class Plotter : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Transform penPoint;
     [SerializeField] private float drawPeriod;
+
     [SerializeField] private Gear inputGearY;
     [SerializeField] private Gear inputGearX;
 
+    [SerializeField] private Rack inputRackY;
+    [SerializeField] private Rack inputRackX;
+
     public Gear InputGearY => inputGearY;
     public Gear InputGearX => inputGearX;
+
+    public Rack InputRackY => inputRackY;
+    public Rack InputRackX => inputRackX;
 
     public void Start()
     {

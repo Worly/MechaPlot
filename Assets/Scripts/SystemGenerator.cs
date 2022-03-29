@@ -35,10 +35,9 @@ public class SystemGenerator : MonoBehaviour
         CreateInputCrank();
 
         var outputGear = GenerateRecursive(topNode, 0);
+        inputCrank.transform.position = new Vector3(inputCrank.transform.position.x, inputCrank.transform.position.y, minZValue - 10f);
 
         AddPlotter(outputGear);
-
-        inputCrank.transform.position = new Vector3(inputCrank.transform.position.x, inputCrank.transform.position.y, minZValue - 5f);
 
         MeshGenerationManager.UnPause();
     }
@@ -56,7 +55,7 @@ public class SystemGenerator : MonoBehaviour
             var gear = Instantiate(gearPrefab, transform);
 
             var inputCrankPosition = inputCrank.transform.localPosition;
-            gear.SetPosition(new Vector3(inputCrankPosition.x, inputCrankPosition.y, requiredZPosition));
+            gear.SetPositionLocal(new Vector3(inputCrankPosition.x, inputCrankPosition.y, requiredZPosition));
 
             if (requiredZPosition < minZValue)
                 minZValue = requiredZPosition;
@@ -138,34 +137,45 @@ public class SystemGenerator : MonoBehaviour
         var plotter = Instantiate(plotterPrefab, transform);
 
         plotter.InputGearY.InputComponent = outputGear;
-        plotter.InputGearX.InputComponent = inputCrank.Gear;
+        plotter.InputGearY.Circumference = outputGear.Circumference;
 
         var outputGearEdge = outputGear.GetPositionOfEdge(-transform.right);
         var inputGearYEdge = plotter.InputGearY.GetPositionOfEdge(transform.right);
         var inputGearYPosition = outputGearEdge + plotter.InputGearY.transform.position - inputGearYEdge;
 
         MoveParentWithChildCoordinates(plotter.transform, plotter.InputGearY.transform, inputGearYPosition);
+
+        var xTransferGear = Instantiate(gearPrefab, transform);
+        var inputGearXPosition = plotter.InputGearX.transform.position;
+        xTransferGear.SetPositionGlobal(new Vector3(inputGearXPosition.x, inputGearXPosition.y, inputCrank.transform.position.z));
+        plotter.InputGearX.InputComponent = xTransferGear;
+        plotter.InputGearX.onlyCopyInput = true;
+
+        MakeBeltConnection(inputCrank.Gear, xTransferGear, backSide: true, topSide: false);
     }
 
-    private void MakeBeltConnection(Gear fromGear, Gear toGear)
+    private void MakeBeltConnection(Gear fromGear, Gear toGear, bool backSide = false, bool topSide = true)
     {
+        int zSide = backSide ? 1 : -1;
+        int ySide = topSide ? 1 : -1;
+
         var gearTake = Instantiate(gearPrefab, transform);
         gearTake.Circumference = 10;
         gearTake.InputComponent = fromGear;
-        gearTake.PlaceOn(fromGear, transform.up);
+        gearTake.PlaceOn(fromGear, ySide * transform.up);
 
         var takeBelt = Instantiate(gearPrefab, transform);
         takeBelt.GearMeshGenerator.gearType = GearType.Belt;
         takeBelt.Circumference = 10;
         takeBelt.InputComponent = gearTake;
         takeBelt.onlyCopyInput = true;
-        takeBelt.PlaceNextTo(gearTake, -transform.forward);
+        takeBelt.PlaceNextTo(gearTake, zSide * transform.forward);
 
         var giveBelt = Instantiate(gearPrefab, transform);
         giveBelt.GearMeshGenerator.gearType = GearType.Belt;
         giveBelt.Circumference = toGear.Circumference;
         giveBelt.InputComponent = takeBelt;
-        giveBelt.PlaceNextTo(toGear, -transform.forward);
+        giveBelt.PlaceNextTo(toGear, zSide * transform.forward);
 
         toGear.InputComponent = giveBelt;
         toGear.onlyCopyInput = true;
