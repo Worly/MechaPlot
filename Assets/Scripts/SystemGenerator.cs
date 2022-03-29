@@ -21,17 +21,22 @@ public class SystemGenerator : MonoBehaviour
 
     public void Clear()
     {
+        var list = new List<Transform>();
         foreach (Transform t in transform)
-            DestroyImmediate(t.gameObject);
+            list.Add(t);
+
+        list.ForEach(t => t.parent = null);
+        list.ForEach(t => DestroyImmediate(t.gameObject));
 
         minZValue = float.MaxValue;
     }
 
     public void Generate(Node topNode)
     {
+        Clear();
+
         MeshGenerationManager.Pause();
 
-        Clear();
         CreateInputCrank();
 
         var outputGear = GenerateRecursive(topNode, 0);
@@ -40,6 +45,8 @@ public class SystemGenerator : MonoBehaviour
         AddPlotter(outputGear);
 
         MeshGenerationManager.UnPause();
+
+        Debug.Log("Generated!");
     }
 
     private void CreateInputCrank()
