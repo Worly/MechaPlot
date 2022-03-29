@@ -13,6 +13,6 @@ public class GearMeshGeneratorEditor : Editor
         base.DrawDefaultInspector();
 
         if (GUILayout.Button("Generate"))
-            generator.GenerateMesh();
+            generator.Generate();
     }
 }

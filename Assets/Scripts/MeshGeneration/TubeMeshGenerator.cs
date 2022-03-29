@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
-public class TubeMeshGenerator : MonoBehaviour
+public class TubeMeshGenerator : MonoBehaviour, IMeshGenerator
 {
     [SerializeField]
     public float circumference = 3;
@@ -16,10 +16,15 @@ public class TubeMeshGenerator : MonoBehaviour
 
     public void Start()
     {
-        GenerateMesh();
+        Generate();
     }
 
-    public void GenerateMesh()
+    public void Generate()
+    {
+        MeshGenerationManager.GenerateOrQueue(this);
+    }
+
+    public void GenerateMeshInternal()
     {
         var meshFilter = GetComponent<MeshFilter>();
 

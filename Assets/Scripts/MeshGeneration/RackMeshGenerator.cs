@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
-public class RackMeshGenerator : MonoBehaviour
+public class RackMeshGenerator : MonoBehaviour, IMeshGenerator
 {
     [SerializeField]
     public float length = 10f;
@@ -22,7 +22,12 @@ public class RackMeshGenerator : MonoBehaviour
     [SerializeField]
     public float thickness = 1;
 
-    public void GenerateMesh()
+    public void Generate()
+    {
+        MeshGenerationManager.GenerateOrQueue(this);
+    }
+
+    public void GenerateMeshInternal()
     {
         var meshFilter = GetComponent<MeshFilter>();
 

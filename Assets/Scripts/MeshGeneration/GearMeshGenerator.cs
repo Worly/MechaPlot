@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
-public class GearMeshGenerator : MonoBehaviour
+public class GearMeshGenerator : MonoBehaviour, IMeshGenerator
 {
     [SerializeField]
     public float circumference;
@@ -25,7 +25,12 @@ public class GearMeshGenerator : MonoBehaviour
     [SerializeField]
     public GearType gearType = GearType.Spur;
 
-    public void GenerateMesh()
+    public void Generate()
+    {
+        MeshGenerationManager.GenerateOrQueue(this);
+    }
+
+    public void GenerateMeshInternal()
     {
         var meshFilter = GetComponent<MeshFilter>();
 

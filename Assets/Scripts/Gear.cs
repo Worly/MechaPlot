@@ -31,7 +31,7 @@ public class Gear : ValuedComponent
     public void GenerateMesh()
     {
         this.gearMeshGenerator.circumference = circumference;
-        this.gearMeshGenerator.GenerateMesh();
+        this.gearMeshGenerator.Generate();
     }
 
     protected override void UpdateValueRender()

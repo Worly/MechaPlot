@@ -29,6 +29,8 @@ public class SystemGenerator : MonoBehaviour
 
     public void Generate(Node topNode)
     {
+        MeshGenerationManager.Pause();
+
         Clear();
         CreateInputCrank();
 
@@ -37,6 +39,8 @@ public class SystemGenerator : MonoBehaviour
         AddPlotter(outputGear);
 
         inputCrank.transform.position = new Vector3(inputCrank.transform.position.x, inputCrank.transform.position.y, minZValue - 5f);
+
+        MeshGenerationManager.UnPause();
     }
 
     private void CreateInputCrank()

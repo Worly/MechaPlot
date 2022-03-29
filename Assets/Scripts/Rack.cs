@@ -15,7 +15,7 @@ public class Rack : ValuedComponent
     public void GenerateMesh()
     {
         this.rackMeshGenerator.length = length;
-        this.rackMeshGenerator.GenerateMesh();
+        this.rackMeshGenerator.Generate();
     }
 
     protected override void UpdateValueRender()
