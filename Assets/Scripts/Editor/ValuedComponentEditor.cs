@@ -11,8 +11,5 @@ public class ValuedComponentEditor: Editor
         var generator = (ValuedComponent)target;
 
         base.DrawDefaultInspector();
-
-        if (GUILayout.Button("PlaceOnInput"))
-            generator.PlaceOnInput();
     }
 }

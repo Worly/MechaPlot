@@ -55,7 +55,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   gearMeshGenerator: {fileID: 1802221400316136720}
-  circumference: 50
+  circumference: 25
 --- !u!1 &6262227806112718614
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07ca66fc7b4472f4abde0279d55df2db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  circumference: 50
+  circumference: 25
   innerCircumference: 2
   toothWidth: 0.5
   toothHeight: 0.5

@@ -530,6 +530,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 2101799311}
   penPoint: {fileID: 1569111309}
   drawPeriod: 0.1
+  inputGearY: {fileID: 2128020264910273375}
+  inputGearX: {fileID: 2128020263438262504}
 --- !u!1001 &2128020262833497695
 PrefabInstance:
   m_ObjectHideFlags: 0

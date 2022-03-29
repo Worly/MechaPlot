@@ -8,7 +8,14 @@ public class Differential : MonoBehaviour
     [SerializeField] private Gear endGear2;
     [SerializeField] private Gear spiderGear1;
     [SerializeField] private Gear spiderGear2;
+    [SerializeField] private Gear inputGear1;
+    [SerializeField] private Gear inputGear2;
     [SerializeField] private Gear outputGear;
+    [SerializeField] private Gear correctOutputGear;
+
+    public Gear InputGear1 => inputGear1;
+    public Gear InputGear2 => inputGear2;
+    public Gear OutputGear => correctOutputGear;
 
     public void Start()
     {

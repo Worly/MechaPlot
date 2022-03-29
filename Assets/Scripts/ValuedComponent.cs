@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class ValuedComponent : MonoBehaviour
 {
-    private float value;
+    [SerializeField] private float value;
     public float Value
     {
         get => value;
@@ -32,7 +32,6 @@ public class ValuedComponent : MonoBehaviour
             if (this.inputComponent != null)
             {
                 this.inputComponent.valueChanged.RemoveListener(OnInputComponentValueChanged);
-                this.inputComponent.positionChanged.RemoveListener(OnInputComponentPositionChanged);
             }
 
             this.inputComponent = value;
@@ -40,13 +39,12 @@ public class ValuedComponent : MonoBehaviour
             if (this.inputComponent != null)
             {
                 this.inputComponent.valueChanged.AddListener(OnInputComponentValueChanged);
-                this.inputComponent.positionChanged.AddListener(OnInputComponentPositionChanged);
+                UpdateValue();
             }
         }
     }
 
-    [SerializeField] protected bool onlyCopyInput;
-    [SerializeField] protected bool placeOnInput;
+    [SerializeField] public bool onlyCopyInput;
 
 
     [HideInInspector] public UnityEvent valueChanged;
@@ -61,16 +59,13 @@ public class ValuedComponent : MonoBehaviour
     public virtual void Start()
     {
         this.startPosition = this.transform.position;
-        this.startRotation = this.transform.rotation;
+        this.startRotation = this.transform.localRotation;
 
         if (this.inputComponent != null)
         {
             this.inputComponent.valueChanged.AddListener(OnInputComponentValueChanged);
-            this.inputComponent.positionChanged.AddListener(OnInputComponentPositionChanged);
+            UpdateValue();
         }
-
-        if (this.placeOnInput && this.inputComponent != null)
-            this.PlaceOnInput();
     }
 
     public virtual void Update()
@@ -98,46 +93,24 @@ public class ValuedComponent : MonoBehaviour
 
     private void OnInputComponentValueChanged()
     {
+        UpdateValue();
+    }
+
+    protected void UpdateValue()
+    {
+        if (this.InputComponent == null)
+            return;
+
         if (this.onlyCopyInput)
             this.Value = this.inputComponent.value;
         else
-        {
-
             this.Value = (int)GetConnectionDirection() * this.inputComponent.Value * this.inputComponent.DistancePerValue() / DistancePerValue();
-        }
     }
 
-    public virtual Vector3 GetLeftEdgePosition()
+    public void SetPosition(Vector3 localPosition)
     {
-        return this.transform.position;
-    }
-
-    public Vector3 GetPositionToPlaceOnInput()
-    {
-        if (inputComponent == null)
-            return Vector3.zero;
-
-        var inputEdgePosition = inputComponent.GetLeftEdgePosition();
-
-        var myEdgePosition = GetLeftEdgePosition();
-        var myOffset = myEdgePosition - this.transform.position;
-
-        return inputEdgePosition + myOffset;
-    }
-
-    public void PlaceOnInput()
-    {
-        if (inputComponent == null)
-            return;
-
-        this.transform.position = this.startPosition = GetPositionToPlaceOnInput();
-        UpdateValueRender();
-    }
-
-    private void OnInputComponentPositionChanged()
-    {
-        if (placeOnInput)
-            PlaceOnInput();
+        this.transform.localPosition = localPosition;
+        this.startPosition = this.transform.position;
     }
 
     public enum ConnectionDirection : int

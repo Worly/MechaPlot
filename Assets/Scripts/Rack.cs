@@ -30,9 +30,4 @@ public class Rack : ValuedComponent
     {
         return 1;
     }
-
-    public override Vector3 GetLeftEdgePosition()
-    {
-        return this.transform.position - this.transform.right * (rackMeshGenerator.width / 2f + rackMeshGenerator.toothWidth / 2f);
-    }
 }
