@@ -39,12 +39,12 @@ public class Gear : ValuedComponent
         if (this.startRotation == null)
             this.startRotation = transform.localRotation;
 
-        transform.localRotation = this.startRotation * Quaternion.AngleAxis(Value, Vector3.forward);
+        transform.localRotation = this.startRotation * Quaternion.AngleAxis(Value * 360, Vector3.forward);
     }
 
     public override float DistancePerValue()
     {
-        return this.circumference / 360;
+        return this.circumference;
     }
 
     public override ConnectionDirection GetConnectionDirection()
