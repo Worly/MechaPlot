@@ -12,6 +12,14 @@ public class Multiplier : MonoBehaviour
     [SerializeField] private Rack outputRack;
     [SerializeField] private Transform pin;
 
+    [SerializeField] private Gear inputGear1;
+    [SerializeField] private Gear inputGear2;
+    [SerializeField] private Gear outputGear;
+
+    public Gear InputGear1 => inputGear1;
+    public Gear InputGear2 => inputGear2;
+    public Gear OutputGear => outputGear;
+
     private float kValue;
     private Vector3 rackPivotStartPosition;
 
