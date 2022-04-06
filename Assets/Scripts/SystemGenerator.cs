@@ -57,6 +57,7 @@ public class SystemGenerator : MonoBehaviour
 
     private Gear GenerateRecursive(Node node, float requiredZPosition)
     {
+        Debug.Log("Doing " + node.ToString());
         if (node is InputNode)
         {
             var gear = Instantiate(gearPrefab, transform);
@@ -83,6 +84,7 @@ public class SystemGenerator : MonoBehaviour
 
         if (node is OperationNode operationNode)
         {
+            
             if (operationNode.Operation == Operation.ADDITION)
             {
                 var differential = Instantiate(differentialPrefab, transform);
@@ -129,6 +131,53 @@ public class SystemGenerator : MonoBehaviour
                 }
 
                 return differential.OutputGear;
+            }
+            else if (operationNode.Operation == Operation.MULTIPLICATION)
+            {
+                var multiplier = Instantiate(multiplierPrefab, transform);
+                multiplier.transform.localPosition = new Vector3(-30, 0, requiredZPosition - multiplier.OutputGear.transform.localPosition.z);
+
+                var inputGear1Position = this.transform.InverseTransformPoint(multiplier.InputGear1.transform.position);
+                var inputGear2Position = this.transform.InverseTransformPoint(multiplier.InputGear2.transform.position);
+
+                var leftGear = GenerateRecursive(operationNode.Left, inputGear1Position.z);
+                var rightGear = GenerateRecursive(operationNode.Right, inputGear2Position.z);
+
+                multiplier.InputGear1.InputComponent = leftGear;
+                multiplier.InputGear1.Circumference = leftGear.Circumference;
+
+                multiplier.InputGear2.InputComponent = rightGear;
+                multiplier.InputGear2.Circumference = rightGear.Circumference;
+
+                var leftGearEdge = leftGear.GetPositionOfEdge(-transform.right);
+                var rightGearEdge = rightGear.GetPositionOfEdge(-transform.right);
+                if (leftGearEdge.x < rightGearEdge.x)
+                {
+                    var gearRightEdge = multiplier.InputGear1.GetPositionOfEdge(transform.right);
+                    var positionOfGear = leftGearEdge + multiplier.InputGear1.transform.position - gearRightEdge;
+
+                    MoveParentWithChildCoordinates(multiplier.transform, multiplier.InputGear1.transform, positionOfGear);
+
+                    MakeBeltConnection(rightGear, multiplier.InputGear2, backSide: true);
+                }
+                else if (leftGearEdge.x > rightGearEdge.x)
+                {
+                    var gearRightEdge = multiplier.InputGear2.GetPositionOfEdge(transform.right);
+                    var positionOfGear = rightGearEdge + multiplier.InputGear2.transform.position - gearRightEdge;
+
+                    MoveParentWithChildCoordinates(multiplier.transform, multiplier.InputGear2.transform, positionOfGear);
+
+                    MakeBeltConnection(leftGear, multiplier.InputGear1);
+                }
+                else
+                {
+                    var gearRightEdge = multiplier.InputGear1.GetPositionOfEdge(transform.right);
+                    var positionOfGear = leftGearEdge + multiplier.InputGear1.transform.position - gearRightEdge;
+
+                    MoveParentWithChildCoordinates(multiplier.transform, multiplier.InputGear1.transform, positionOfGear);
+                }
+
+                return multiplier.OutputGear;
             }
             else
             {
