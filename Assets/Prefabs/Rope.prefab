@@ -204,6 +204,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f389e91d0c95e4740bc9338200f0360c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lineSegmentLength: 1
+  lineSegmentLength: 0.5
   gear1: {fileID: 0}
   gear2: {fileID: 0}
