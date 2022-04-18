@@ -29,7 +29,10 @@ namespace MathParser
 
             var parser = new Parser(sanitizedExpression);
 
-            return parser.ParseExpression();
+            var topNode = parser.ParseExpression();
+
+            // simplify (ex. x * 2 * 2 = x * 4)
+            return topNode.Evaluate();
         }
 
         private Parser(string expression)
