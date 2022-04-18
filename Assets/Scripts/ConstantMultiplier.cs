@@ -40,7 +40,7 @@ public class ConstantMultiplier : MonoBehaviour
         this.constant = constant;
 
         var shouldNegative = false;
-        var isNegativeCurrent = false;
+        var isNegativeCurrent = true;
         var isReciprocal = false;
 
         Gear lastGear = inputGear;
