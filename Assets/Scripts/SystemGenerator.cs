@@ -14,9 +14,11 @@ public class SystemGenerator : MonoBehaviour
     [SerializeField] private ConstantMultiplier constantMultiplierPrefab;
     [SerializeField] private Plotter plotterPrefab;
     [SerializeField] private Rope ropePrefab;
+    [SerializeField] private GameObject shaftPrefab;
 
     private Crank inputCrank;
     private float minZValue;
+    private float maxZValue;
 
     private readonly float MAX_X_VALUE = -10;
 
@@ -30,6 +32,7 @@ public class SystemGenerator : MonoBehaviour
         list.ForEach(t => DestroyImmediate(t.gameObject));
 
         minZValue = float.MaxValue;
+        maxZValue = float.MinValue;
     }
 
     public void Generate(Node topNode)
@@ -42,6 +45,8 @@ public class SystemGenerator : MonoBehaviour
 
         var outputGear = GenerateRecursive(topNode, 0);
         inputCrank.transform.position = new Vector3(inputCrank.transform.position.x, inputCrank.transform.position.y, minZValue - 10f);
+
+        AddShaft(inputCrank.transform.localPosition.x, inputCrank.transform.localPosition.y, inputCrank.transform.localPosition.z, maxZValue);
 
         AddPlotter(outputGear);
 
@@ -68,6 +73,9 @@ public class SystemGenerator : MonoBehaviour
 
             if (requiredZPosition < minZValue)
                 minZValue = requiredZPosition;
+
+            if (requiredZPosition > maxZValue)
+                maxZValue = requiredZPosition;
 
             gear.InputComponent = inputCrank.Gear;
             gear.onlyCopyInput = true;
@@ -278,6 +286,7 @@ public class SystemGenerator : MonoBehaviour
         xTransferGear.SetPositionGlobal(new Vector3(inputGearXPosition.x, inputGearXPosition.y, inputCrank.transform.position.z));
         plotter.InputGearX.InputComponent = xTransferGear;
         plotter.InputGearX.onlyCopyInput = true;
+        AddShaft(xTransferGear.transform.localPosition.x, xTransferGear.transform.localPosition.y, xTransferGear.transform.localPosition.z, transform.InverseTransformPoint(plotter.InputGearX.transform.position).z);
 
         MakeBeltConnection(inputCrank.Gear, xTransferGear, backSide: true, topSide: false);
     }
@@ -318,5 +327,13 @@ public class SystemGenerator : MonoBehaviour
     private void MoveParentWithChildCoordinates(Transform parent, Transform child, Vector3 positionOfChild)
     {
         parent.position = positionOfChild - parent.InverseTransformPoint(child.position);
+    }
+
+    private void AddShaft(float x, float y, float fromZ, float toZ)
+    {
+        var shaft = Instantiate(shaftPrefab, transform);
+
+        shaft.transform.localPosition = new Vector3(x, y, (fromZ + toZ) / 2);
+        shaft.transform.localScale = new Vector3(1, 1, Mathf.Abs(toZ - fromZ));
     }
 }

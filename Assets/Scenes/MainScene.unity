@@ -11606,6 +11606,7 @@ MonoBehaviour:
   constantMultiplierPrefab: {fileID: 2189924976048742252, guid: 3641eb1ddfa744449bd4def71c96cba3, type: 3}
   plotterPrefab: {fileID: 2128020263477329276, guid: d5cc51c6a68d90a47b6284dc61ab27e0, type: 3}
   ropePrefab: {fileID: 6632231247782226687, guid: 890fe0278205a8648a9d31d754e9c223, type: 3}
+  shaftPrefab: {fileID: 1878719316459364591, guid: a27789ec38428ef4cb8c8d26947c7b34, type: 3}
 --- !u!4 &2103388838
 Transform:
   m_ObjectHideFlags: 0
