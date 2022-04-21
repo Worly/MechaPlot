@@ -7,7 +7,10 @@ public class Gear : ValuedComponent
 
     public GearMeshGenerator GearMeshGenerator => gearMeshGenerator;
 
-    public float Circumference { 
+    private float AnglePerTooth => 360f / circumference;
+
+    public float Circumference
+    {
         get => circumference;
         set
         {
@@ -45,6 +48,28 @@ public class Gear : ValuedComponent
     public override float DistancePerValue()
     {
         return this.circumference;
+    }
+
+    public override void UpdateMeshOffset()
+    {
+        var myOffset = this.GetMeshOffsetFor(InputComponent);
+        var otherOffset = InputComponent.GetMeshOffsetFor(this, true);
+
+        this.gearMeshGenerator.transform.localRotation = Quaternion.Euler(0, 0, (otherOffset + myOffset) * AnglePerTooth);
+    }
+
+    public override float GetMeshOffsetFor(ValuedComponent valuedComponent, bool withMyOffset = false)
+    {
+        float angleOffset = 0;
+        if (valuedComponent is Gear gear)
+            angleOffset = ValuedComponentsHelper.AngleBetween(this, gear);
+        else if (valuedComponent is Rack rack)
+            angleOffset = ValuedComponentsHelper.AngleBetween(this, rack);
+
+        if (withMyOffset)
+            angleOffset -= this.GearMeshGenerator.transform.localRotation.eulerAngles.z;
+
+        return (angleOffset % AnglePerTooth) / AnglePerTooth;
     }
 
     public override ConnectionDirection GetConnectionDirection()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ValuedComponent : MonoBehaviour
+public abstract class ValuedComponent : MonoBehaviour
 {
     [SerializeField] private float value;
     public float Value
@@ -51,6 +51,9 @@ public class ValuedComponent : MonoBehaviour
     protected Vector3 startPosition;
     protected Quaternion startRotation;
 
+    public Vector3 StartLocalPosition => startPosition;
+    public Quaternion StartLocalRotation => startRotation;
+
     public virtual void Start()
     {
         this.startPosition = this.transform.localPosition;
@@ -63,14 +66,16 @@ public class ValuedComponent : MonoBehaviour
         }
     }
 
-    protected virtual void UpdateValueRender()
+    public virtual void Update()
     {
+        if (this.inputComponent != null && !onlyCopyInput)
+            UpdateMeshOffset();
     }
 
-    public virtual float DistancePerValue()
-    {
-        return 1;
-    }
+    protected abstract void UpdateValueRender();
+    public abstract float DistancePerValue();
+    public abstract void UpdateMeshOffset();
+    public abstract float GetMeshOffsetFor(ValuedComponent valuedComponent, bool withMyOffset = false);
 
     public virtual ConnectionDirection GetConnectionDirection()
     {
