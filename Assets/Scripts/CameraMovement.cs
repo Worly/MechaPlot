@@ -45,6 +45,12 @@ public class CameraMovement : MonoBehaviour
         yaw += mouseSensitivity * Input.GetAxis("Mouse X");
         pitch -= mouseSensitivity * Input.GetAxis("Mouse Y");
 
+        if (pitch > 90)
+            pitch = 90;
+
+        if (pitch < -90)
+            pitch = -90;
+
         transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
     }
 
