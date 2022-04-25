@@ -160,7 +160,7 @@ namespace MathParser
             var match = regex.Match(expression, index);
 
             if (match.Success == false || match.Index != index)
-                throw new LexicalErrorException(expression);
+                throw new LexicalErrorException(expression.Substring(index, 1));
 
             if (consume)
                 index = match.Index + match.Length;
@@ -193,12 +193,8 @@ namespace MathParser
 
     public class LexicalErrorException : Exception
     {
-        public string Expression { get; set; }
-        public int Offset { get; set; }
-
-        public LexicalErrorException(string expression) : base("Uknown character at " + expression)
+        public LexicalErrorException(string character) : base($"Uknown character '{character}'")
         {
-            Expression = expression;
         }
     }
 

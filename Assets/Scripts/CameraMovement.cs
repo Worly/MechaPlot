@@ -57,7 +57,12 @@ public class CameraMovement : MonoBehaviour
     {
         if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A)
              && !Input.GetKey(KeyCode.Space) && !Input.GetKey(KeyCode.LeftShift))
-            currentMovementSpeed -= currentMovementSpeed.normalized * movementDeacceleration * Time.deltaTime;
+        {
+            if (currentMovementSpeed.magnitude < movementAcceleration * Time.deltaTime)
+                currentMovementSpeed = Vector3.zero;
+            else
+                currentMovementSpeed -= currentMovementSpeed.normalized * movementDeacceleration * Time.deltaTime;
+        }
     }
 
     public void Lock()
