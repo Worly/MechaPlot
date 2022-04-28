@@ -24,9 +24,9 @@ public class Gear : ValuedComponent
         }
     }
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
 
         this.GenerateMesh();
     }

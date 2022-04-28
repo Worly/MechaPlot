@@ -14,7 +14,7 @@ public class TubeMeshGenerator : MonoBehaviour, IMeshGenerator
     [SerializeField]
     public float length = 2;
 
-    public void Start()
+    public void Awake()
     {
         Generate();
     }
@@ -54,6 +54,7 @@ public class TubeMeshGenerator : MonoBehaviour, IMeshGenerator
         meshBuilder.MakeCircleBridge(outerRightCircle, outerLeftCircle, copyVertices: true);
 
         meshFilter.mesh = meshBuilder.Build();
+        meshFilter.mesh.RecalculateBounds();
     }
 
     private void GenerateSide(MeshBuilder meshBuilder, float outerRadius, float innerRadius, int vertexCount, float zValue, int zNormalDirection, out List<Vertex> outerCircle, out List<Vertex> innerCircle)

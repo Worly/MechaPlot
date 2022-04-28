@@ -54,7 +54,7 @@ public abstract class ValuedComponent : MonoBehaviour
     public Vector3 StartLocalPosition => startPosition;
     public Quaternion StartLocalRotation => startRotation;
 
-    public virtual void Start()
+    public virtual void Awake()
     {
         this.startPosition = this.transform.localPosition;
         this.startRotation = this.transform.localRotation;

@@ -49,6 +49,7 @@ public class RackMeshGenerator : MonoBehaviour, IMeshGenerator
         meshBuilder.MakeQuad(new List<Vertex>() { innerRightEdge.Last(), outerRightEdge.First(), outerLeftEdge.First(), innerLeftEdge.Last() }, true);
 
         meshFilter.mesh = meshBuilder.Build();
+        meshFilter.mesh.RecalculateBounds();
     }
 
     private void GenerateSide(MeshBuilder meshBuilder, float length, int vertexCount, float zValue, int zNormalDirection, out List<Vertex> outerEdge, out List<Vertex> innerEdge)

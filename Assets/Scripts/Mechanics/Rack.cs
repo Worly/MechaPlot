@@ -7,9 +7,9 @@ public class Rack : ValuedComponent
 
     private float DistancePerTooth => rackMeshGenerator.toothWidth * 2f;
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
 
         GenerateMesh();
     }
