@@ -375,4 +375,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gear: {fileID: 6950626248361011751}
-  crankSpeed: 0.05
+  crankSpeed: 0.5

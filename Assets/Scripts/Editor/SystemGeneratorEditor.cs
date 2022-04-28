@@ -19,7 +19,7 @@ public class SystemGeneratorEditor : Editor
         if (GUILayout.Button("Generate"))
         {
             var node = MathParser.Parser.Parse(formula);
-            generator.Generate(node);
+            generator.Generate(node, -5, 5, -5, 5);
         }
     }
 }

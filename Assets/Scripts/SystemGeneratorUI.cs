@@ -65,7 +65,7 @@ public class SystemGeneratorUI : MonoBehaviour
 
         try
         {
-            systemGenerator.Generate(expressionTopNode);
+            systemGenerator.Generate(expressionTopNode, xFrom, xTo, yFrom, yTo);
         }
         catch (Exception e)
         {

@@ -35,7 +35,7 @@ public class SystemGenerator : MonoBehaviour
         maxZValue = float.MinValue;
     }
 
-    public void Generate(Node topNode)
+    public void Generate(Node topNode, float xFrom, float xTo, float yFrom, float yTo)
     {
         Clear();
 
@@ -48,7 +48,7 @@ public class SystemGenerator : MonoBehaviour
 
         AddShaft(inputCrank.transform.localPosition.x, inputCrank.transform.localPosition.y, inputCrank.transform.localPosition.z, maxZValue);
 
-        AddPlotter(outputGear);
+        AddPlotter(outputGear, xFrom, xTo, yFrom, yTo);
 
         MeshGenerationManager.UnPause();
 
@@ -268,12 +268,12 @@ public class SystemGenerator : MonoBehaviour
         return differential.OutputGear;
     }
 
-    private void AddPlotter(Gear outputGear)
+    private void AddPlotter(Gear outputGear, float xFrom, float xTo, float yFrom, float yTo)
     {
         var plotter = Instantiate(plotterPrefab, transform);
-
         plotter.InputGearY.InputComponent = outputGear;
         plotter.InputGearY.Circumference = outputGear.Circumference;
+        plotter.GenerateCoordinateSystem(xFrom, xTo, yFrom, yTo);
 
         var outputGearEdge = outputGear.GetPositionOfEdge(-transform.right);
         var inputGearYEdge = plotter.InputGearY.GetPositionOfEdge(transform.right);
@@ -284,6 +284,7 @@ public class SystemGenerator : MonoBehaviour
         var xTransferGear = Instantiate(gearPrefab, transform);
         var inputGearXPosition = plotter.InputGearX.transform.position;
         xTransferGear.SetPositionGlobal(new Vector3(inputGearXPosition.x, inputGearXPosition.y, inputCrank.transform.position.z));
+        xTransferGear.Circumference = inputCrank.Gear.Circumference * 2; // so when crank rotates 10 times, the plotter input is rotated 5 times, and plotter is moved by 50 units
         plotter.InputGearX.InputComponent = xTransferGear;
         plotter.InputGearX.onlyCopyInput = true;
         AddShaft(xTransferGear.transform.localPosition.x, xTransferGear.transform.localPosition.y, xTransferGear.transform.localPosition.z, transform.InverseTransformPoint(plotter.InputGearX.transform.position).z);

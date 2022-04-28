@@ -14,6 +14,9 @@ public class Plotter : MonoBehaviour
     [SerializeField] private Rack inputRackY;
     [SerializeField] private Rack inputRackX;
 
+    [SerializeField] private NumberLine xNumberLine;
+    [SerializeField] private NumberLine yNumberLine;
+
     public Gear InputGearY => inputGearY;
     public Gear InputGearX => inputGearX;
 
@@ -36,6 +39,17 @@ public class Plotter : MonoBehaviour
             lineRenderer.positionCount++;
             lineRenderer.SetPosition(lineRenderer.positionCount - 1, GetCurrentPenPosition());
         }
+    }
+
+    public void GenerateCoordinateSystem(float xFrom, float xTo, float yFrom, float yTo)
+    {
+        xNumberLine.fromValue = xFrom;
+        xNumberLine.toValue = xTo;
+        xNumberLine.Generate();
+
+        yNumberLine.fromValue = yFrom;
+        yNumberLine.toValue = yTo;
+        yNumberLine.Generate();
     }
 
     private Vector3 GetCurrentPenPosition()
