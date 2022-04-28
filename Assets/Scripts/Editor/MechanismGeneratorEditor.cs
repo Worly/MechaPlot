@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(SystemGenerator), true)]
-public class SystemGeneratorEditor : Editor
+[CustomEditor(typeof(MechanismGenerator), true)]
+public class MechanismGeneratorEditor : Editor
 {
     private string formula = "x + 2";
 
     public override void OnInspectorGUI()
     {
-        var generator = (SystemGenerator)target;
+        var generator = (MechanismGenerator)target;
 
         base.DrawDefaultInspector();
 

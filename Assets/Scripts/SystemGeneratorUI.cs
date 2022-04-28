@@ -15,7 +15,7 @@ public class SystemGeneratorUI : MonoBehaviour
 
     [SerializeField] private Text errorText;
 
-    [SerializeField] private SystemGenerator systemGenerator;
+    [SerializeField] private MechanismGenerator systemGenerator;
 
     public void Start()
     {
