@@ -104,7 +104,7 @@ public class MechanismGenerator : MonoBehaviour
     {
         var center = (yFrom + yTo) / 2f;
         var delta = yTo - yFrom;
-        var formula = $"(x - {center}) * {1 / (delta) * 5f}"; // /2f because of plotter gear ratios
+        var formula = $"(x - {center}) * {1 / (delta) * 5f}"; // * 5f because of plotter gear ratios
         var topNode = MathParser.Parser.Parse(formula);
 
         var inputNodes = new List<OperationGenerator>();
