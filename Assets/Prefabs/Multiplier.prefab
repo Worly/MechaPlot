@@ -540,8 +540,8 @@ MonoBehaviour:
   inputRack: {fileID: 1820536999}
   outputRack: {fileID: 2312706085453642344}
   pin: {fileID: 400042824}
-  inputGear1: {fileID: 660017846}
-  inputGear2: {fileID: 822154288}
+  inputGear1: {fileID: 822154288}
+  inputGear2: {fileID: 660017846}
   outputGear: {fileID: 1550455313}
 --- !u!1 &2735037822861058672
 GameObject:

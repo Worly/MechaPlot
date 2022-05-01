@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4806767421608477022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4806767421608477020}
+  - component: {fileID: 4806767421608477021}
+  m_Layer: 0
+  m_Name: OperationGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4806767421608477020
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4806767421608477022}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -19.42056, y: -0.59342957, z: 1.0790551}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4806767421608477021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4806767421608477022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f866e596d9f862c489510d30c599da75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gearPrefab: {fileID: 605292215, guid: 00e9599ca2371b84faf7eec556717594, type: 3}
+  crankPrefab: {fileID: 3213750243429588970, guid: 6e3d0610806d7f947a18115c3f3049fc, type: 3}
+  differentialPrefab: {fileID: 1073980497, guid: c5380d794d8ee1d449a4d729b8bf605d, type: 3}
+  multiplierPrefab: {fileID: 331735603, guid: d40f98f6a92f59746a1abc1028ee970f, type: 3}
+  constantMultiplierPrefab: {fileID: 2189924976048742252, guid: 3641eb1ddfa744449bd4def71c96cba3, type: 3}
+  ropePrefab: {fileID: 6632231247782226687, guid: 890fe0278205a8648a9d31d754e9c223, type: 3}
+  shaftPrefab: {fileID: 1878719316459364591, guid: a27789ec38428ef4cb8c8d26947c7b34, type: 3}
+  operationGeneratorPrefab: {fileID: 4806767421608477021}

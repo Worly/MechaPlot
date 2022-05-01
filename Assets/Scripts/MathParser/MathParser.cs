@@ -31,8 +31,15 @@ namespace MathParser
 
             var topNode = parser.ParseExpression();
 
+            // transform:
+            // remove subtractions: (x - 2 = x + (-1 * 2)) or (2 - x = 2 + (-1 * x))
+            // remove negative unary operation: (-x = -1 * x)
+            topNode = topNode.Transform();
+
             // simplify (ex. x * 2 * 2 = x * 4)
-            return topNode.Evaluate();
+            topNode = topNode.Evaluate();
+
+            return topNode;
         }
 
         private Parser(string expression)

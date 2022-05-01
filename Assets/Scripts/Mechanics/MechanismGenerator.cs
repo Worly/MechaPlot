@@ -2,6 +2,7 @@ using MathParser;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MechanismGenerator : MonoBehaviour
@@ -9,18 +10,11 @@ public class MechanismGenerator : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private Gear gearPrefab;
     [SerializeField] private Crank crankPrefab;
-    [SerializeField] private Differential differentialPrefab;
-    [SerializeField] private Multiplier multiplierPrefab;
-    [SerializeField] private ConstantMultiplier constantMultiplierPrefab;
     [SerializeField] private Plotter plotterPrefab;
     [SerializeField] private Rope ropePrefab;
     [SerializeField] private GameObject shaftPrefab;
 
-    private Crank inputCrank;
-    private float minZValue;
-    private float maxZValue;
-
-    private readonly float MAX_X_VALUE = -10;
+    [SerializeField] private OperationGenerator operationGeneratorPrefab;
 
     public void Clear()
     {
@@ -30,245 +24,103 @@ public class MechanismGenerator : MonoBehaviour
 
         list.ForEach(t => t.parent = null);
         list.ForEach(t => DestroyImmediate(t.gameObject));
-
-        minZValue = float.MaxValue;
-        maxZValue = float.MinValue;
     }
 
     public void Generate(Node topNode, float xFrom, float xTo, float yFrom, float yTo)
     {
         Clear();
 
+        // generate math function
+        var inputNodes = new List<OperationGenerator>();
+        var topNodeGenerator = Instantiate(operationGeneratorPrefab, transform);
+        topNodeGenerator.Generate(topNode, operationGeneratorPrefab, ref inputNodes);
+
+        // create yGearBox and align topNodeGenerator output to it
+        var yGearBox = CreateYGearBox(topNodeGenerator, yFrom, yTo);
+
+        // make xGears and connect them to all inputNodes
+        var bounds = OperationGenerator.GetBoundsInGivenSpace(topNodeGenerator.transform.localPosition, transform, topNodeGenerator.LocalSpaceBounds, topNodeGenerator.transform);
+        var xGearXPos = bounds.center.x + bounds.extents.x + 15f;
+        var xGears = new List<Gear>();
         MeshGenerationManager.Pause();
+        foreach (var inputNode in inputNodes)
+        {
+            var xGear = Instantiate(gearPrefab, transform);
+            xGear.transform.localPosition = new Vector3(xGearXPos, 0, transform.InverseTransformPoint(inputNode.OutputGear.transform.position).z);
 
-        CreateInputCrank();
+            MakeBeltConnection(xGear, inputNode.OutputGear);
 
-        var outputGear = GenerateRecursive(topNode, 0);
-        inputCrank.transform.position = new Vector3(inputCrank.transform.position.x, inputCrank.transform.position.y, minZValue - 10f);
-
-        AddShaft(inputCrank.transform.localPosition.x, inputCrank.transform.localPosition.y, inputCrank.transform.localPosition.z, maxZValue);
-
-        AddPlotter(outputGear, xFrom, xTo, yFrom, yTo);
-
+            xGears.Add(xGear);
+        }
         MeshGenerationManager.UnPause();
+
+        // create shaft which joins all xGears
+        var orderedXGears = xGears.OrderBy(o => o.transform.localPosition.z);
+        if (xGears.Count >= 2)
+        {
+            AddShaft(xGearXPos, 0, orderedXGears.First().transform.localPosition.z, orderedXGears.Last().transform.localPosition.z);
+
+            foreach (var xGear in orderedXGears.Skip(1))
+            {
+                xGear.InputComponent = orderedXGears.First();
+                xGear.onlyCopyInput = true;
+            }
+        }
+
+        // create xGearBox and connect it to xGears
+        var xGearBox = CreateXGearBox(xFrom, xTo, out Crank inputCrank);
+        var firstXGear = orderedXGears.First();
+        float zOffset = -3f;
+        MoveParentWithChildCoordinates(xGearBox.transform, xGearBox.OutputGear.transform, firstXGear.transform.position + new Vector3(0, 0, zOffset));
+        firstXGear.InputComponent = xGearBox.OutputGear;
+        firstXGear.onlyCopyInput = true;
+        AddShaft(xGearXPos, 0, firstXGear.transform.localPosition.z + zOffset, firstXGear.transform.localPosition.z);
+
+        // add plotter connected to inputCrank and yGearBox output
+        AddPlotter(inputCrank, yGearBox.OutputGear, xFrom, xTo, yFrom, yTo);
 
         Debug.Log("Generated!");
     }
 
-    private void CreateInputCrank()
+    private OperationGenerator CreateXGearBox(float xFrom, float xTo, out Crank inputCrank)
     {
-        inputCrank = Instantiate(crankPrefab, transform);
-        inputCrank.transform.localPosition = Vector3.zero;
+        var formula = $"-(-x * {(xTo - xFrom) / 10f} + {xFrom})";
+        var topNode = MathParser.Parser.Parse(formula);
+
+        var inputNodes = new List<OperationGenerator>();
+        var operationGenerator = Instantiate(operationGeneratorPrefab, transform);
+        operationGenerator.Generate(topNode, operationGeneratorPrefab, ref inputNodes);
+
+        var inputNodeGenerator = inputNodes.FirstOrDefault();
+
+        inputCrank = Instantiate(crankPrefab, inputNodeGenerator.transform);
+        inputCrank.Gear.PlaceOn(inputNodeGenerator.OutputGear, Vector3.right);
+        inputNodeGenerator.OutputGear.InputComponent = inputCrank.Gear;
+
+        return operationGenerator;
     }
 
-    private Gear GenerateRecursive(Node node, float requiredZPosition)
+    private OperationGenerator CreateYGearBox(OperationGenerator topNodeGenerator, float yFrom, float yTo)
     {
-        Debug.Log("Doing " + node.ToString());
-        if (node is InputNode)
-        {
-            var gear = Instantiate(gearPrefab, transform);
+        var center = (yFrom + yTo) / 2f;
+        var delta = yTo - yFrom;
+        var formula = $"(x - {center}) * {1 / (delta) * 5f}"; // /2f because of plotter gear ratios
+        var topNode = MathParser.Parser.Parse(formula);
 
-            var inputCrankPosition = inputCrank.transform.localPosition;
-            gear.SetPositionLocal(new Vector3(inputCrankPosition.x, inputCrankPosition.y, requiredZPosition));
+        var inputNodes = new List<OperationGenerator>();
+        var operationGenerator = Instantiate(operationGeneratorPrefab, transform);
+        operationGenerator.Generate(topNode, operationGeneratorPrefab, ref inputNodes);
 
-            if (requiredZPosition < minZValue)
-                minZValue = requiredZPosition;
+        var operationGeneratorInput = inputNodes.FirstOrDefault();
 
-            if (requiredZPosition > maxZValue)
-                maxZValue = requiredZPosition;
+        operationGeneratorInput.OutputGear.InputComponent = topNodeGenerator.OutputGear;
+        operationGeneratorInput.OutputGear.onlyCopyInput = true;
+        MoveParentWithChildCoordinates(topNodeGenerator.transform, topNodeGenerator.OutputGear.transform, operationGeneratorInput.OutputGear.transform.position + new Vector3(0, 0, -1f));
 
-            gear.InputComponent = inputCrank.Gear;
-            gear.onlyCopyInput = true;
-
-            return gear;
-        }
-
-        if (node is ValueNode valueNode)
-        {
-            var gear = Instantiate(gearPrefab, transform);
-            gear.transform.localPosition = new Vector3(MAX_X_VALUE, 0, requiredZPosition);
-            gear.Value = valueNode.Value;
-            return gear;
-        }
-        else if (node is OperationNode operationNode)
-        {
-            if (operationNode.Operation == Operation.ADDITION)
-            {
-                return AddDifferential(
-                    requiredZPosition,
-                    z => GenerateRecursive(operationNode.Left, z),
-                    z => GenerateRecursive(operationNode.Right, z));
-            }
-            else if (operationNode.Operation == Operation.SUBTRACTION)
-            {
-                return AddDifferential(
-                    requiredZPosition,
-                    z => GenerateRecursive(operationNode.Left, z),
-                    z => AddConstantMultiplier(-1, z, z2 => GenerateRecursive(operationNode.Right, z2)));
-            }
-            else if (operationNode.Operation == Operation.MULTIPLICATION)
-            {
-                if (operationNode.Left is ValueNode constantNode)
-                {
-                    return AddConstantMultiplier(
-                        constantNode.Value,
-                        requiredZPosition,
-                        z => GenerateRecursive(operationNode.Right, z));
-                }
-                else if (operationNode.Right is ValueNode constantNode2)
-                {
-                    return AddConstantMultiplier(
-                        constantNode2.Value,
-                        requiredZPosition,
-                        z => GenerateRecursive(operationNode.Left, z));
-                }
-                else
-                {
-                    return AddMultiplier(
-                        requiredZPosition,
-                        z => GenerateRecursive(operationNode.Left, z),
-                        z => GenerateRecursive(operationNode.Right, z));
-                } 
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
-        else if (node is UnaryOperationNode unaryOperationNode)
-        {
-            if (unaryOperationNode.Operation == UnaryOperation.NEGATIVE)
-            {
-                return AddConstantMultiplier(
-                    -1,
-                    requiredZPosition,
-                    z => GenerateRecursive(unaryOperationNode.Node, z));
-            }
-        }
-
-        throw new NotImplementedException();
+        return operationGenerator;
     }
 
-    private Gear AddConstantMultiplier(float constant, float requiredZPosition, Func<float, Gear> inputGearGenerator)
-    {
-        var constantMultiplier = Instantiate(constantMultiplierPrefab, transform);
-        constantMultiplier.GenerateGears(constant);
-        constantMultiplier.transform.localPosition = new Vector3(0, 0, requiredZPosition - constantMultiplier.OutputGear.transform.localPosition.z);
-
-        var inputGearPosition = this.transform.InverseTransformPoint(constantMultiplier.InputGear.transform.position);
-
-        var inputGear = inputGearGenerator(inputGearPosition.z);
-
-        constantMultiplier.InputGear.InputComponent = inputGear;
-        constantMultiplier.InputGear.Circumference = inputGear.Circumference;
-
-        var inputGearEdge = inputGear.GetPositionOfEdge(-transform.right);
-
-        var gearRightEdge = constantMultiplier.InputGear.GetPositionOfEdge(transform.right);
-        var positionOfGear = inputGearEdge + constantMultiplier.InputGear.transform.position - gearRightEdge;
-
-        MoveParentWithChildCoordinates(constantMultiplier.transform, constantMultiplier.InputGear.transform, positionOfGear);
-
-        return constantMultiplier.OutputGear;
-    }
-
-    private Gear AddMultiplier(float requiredZPosition, Func<float, Gear> leftGearGenerator, Func<float, Gear> rightGearGenerator)
-    {
-        var multiplier = Instantiate(multiplierPrefab, transform);
-        multiplier.transform.localPosition = new Vector3(-30, 0, requiredZPosition - multiplier.OutputGear.transform.localPosition.z);
-
-        var inputGear1Position = this.transform.InverseTransformPoint(multiplier.InputGear1.transform.position);
-        var inputGear2Position = this.transform.InverseTransformPoint(multiplier.InputGear2.transform.position);
-
-        var leftGear = leftGearGenerator(inputGear1Position.z);
-        var rightGear = rightGearGenerator(inputGear2Position.z);
-
-        multiplier.InputGear1.InputComponent = leftGear;
-        multiplier.InputGear1.Circumference = leftGear.Circumference;
-
-        multiplier.InputGear2.InputComponent = rightGear;
-        multiplier.InputGear2.Circumference = rightGear.Circumference;
-
-        var leftGearEdge = leftGear.GetPositionOfEdge(-transform.right);
-        var rightGearEdge = rightGear.GetPositionOfEdge(-transform.right);
-        if (leftGearEdge.x < rightGearEdge.x)
-        {
-            var gearRightEdge = multiplier.InputGear1.GetPositionOfEdge(transform.right);
-            var positionOfGear = leftGearEdge + multiplier.InputGear1.transform.position - gearRightEdge;
-
-            MoveParentWithChildCoordinates(multiplier.transform, multiplier.InputGear1.transform, positionOfGear);
-
-            MakeBeltConnection(rightGear, multiplier.InputGear2, backSide: true);
-        }
-        else if (leftGearEdge.x > rightGearEdge.x)
-        {
-            var gearRightEdge = multiplier.InputGear2.GetPositionOfEdge(transform.right);
-            var positionOfGear = rightGearEdge + multiplier.InputGear2.transform.position - gearRightEdge;
-
-            MoveParentWithChildCoordinates(multiplier.transform, multiplier.InputGear2.transform, positionOfGear);
-
-            MakeBeltConnection(leftGear, multiplier.InputGear1, backSide: true);
-        }
-        else
-        {
-            var gearRightEdge = multiplier.InputGear1.GetPositionOfEdge(transform.right);
-            var positionOfGear = leftGearEdge + multiplier.InputGear1.transform.position - gearRightEdge;
-
-            MoveParentWithChildCoordinates(multiplier.transform, multiplier.InputGear1.transform, positionOfGear);
-        }
-
-        return multiplier.OutputGear;
-    }
-
-    private Gear AddDifferential(float requiredZPosition, Func<float, Gear> leftGearGenerator, Func<float, Gear> rightGearGenerator)
-    {
-        var differential = Instantiate(differentialPrefab, transform);
-        differential.transform.localPosition = new Vector3(-30, 0, requiredZPosition - differential.OutputGear.transform.localPosition.z);
-
-        var inputGear1Position = this.transform.InverseTransformPoint(differential.InputGear1.transform.position);
-        var inputGear2Position = this.transform.InverseTransformPoint(differential.InputGear2.transform.position);
-
-        var leftGear = leftGearGenerator(inputGear1Position.z);
-        var rightGear = rightGearGenerator(inputGear2Position.z);
-
-        differential.InputGear1.InputComponent = leftGear;
-        differential.InputGear1.Circumference = leftGear.Circumference;
-
-        differential.InputGear2.InputComponent = rightGear;
-        differential.InputGear2.Circumference = rightGear.Circumference;
-
-        var leftGearEdge = leftGear.GetPositionOfEdge(-transform.right);
-        var rightGearEdge = rightGear.GetPositionOfEdge(-transform.right);
-        if (leftGearEdge.x < rightGearEdge.x)
-        {
-            var gearRightEdge = differential.InputGear1.GetPositionOfEdge(transform.right);
-            var positionOfGear = leftGearEdge + differential.InputGear1.transform.position - gearRightEdge;
-
-            MoveParentWithChildCoordinates(differential.transform, differential.InputGear1.transform, positionOfGear);
-
-            MakeBeltConnection(rightGear, differential.InputGear2);
-        }
-        else if (leftGearEdge.x > rightGearEdge.x)
-        {
-            var gearRightEdge = differential.InputGear2.GetPositionOfEdge(transform.right);
-            var positionOfGear = rightGearEdge + differential.InputGear2.transform.position - gearRightEdge;
-
-            MoveParentWithChildCoordinates(differential.transform, differential.InputGear2.transform, positionOfGear);
-
-            MakeBeltConnection(leftGear, differential.InputGear1);
-        }
-        else
-        {
-            var gearRightEdge = differential.InputGear1.GetPositionOfEdge(transform.right);
-            var positionOfGear = leftGearEdge + differential.InputGear1.transform.position - gearRightEdge;
-
-            MoveParentWithChildCoordinates(differential.transform, differential.InputGear1.transform, positionOfGear);
-        }
-
-        return differential.OutputGear;
-    }
-
-    private void AddPlotter(Gear outputGear, float xFrom, float xTo, float yFrom, float yTo)
+    private void AddPlotter(Crank inputCrank, Gear outputGear, float xFrom, float xTo, float yFrom, float yTo)
     {
         var plotter = Instantiate(plotterPrefab, transform);
         plotter.InputGearY.InputComponent = outputGear;

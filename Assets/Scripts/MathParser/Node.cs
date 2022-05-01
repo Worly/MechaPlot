@@ -13,6 +13,11 @@ namespace MathParser
         {
             return this;
         }
+
+        public virtual Node Transform()
+        {
+            return this;
+        }
     }
 
     public class ValueNode : Node
@@ -84,6 +89,16 @@ namespace MathParser
             var leftValue = left as ValueNode;
             var rightValue = right as ValueNode;
 
+            if (IsConstantOperation(out float value, out Node variableNode))
+            {
+                var variableNodeEvaluated = variableNode == Left ? left : right;
+
+                if (Operation == Operation.MULTIPLICATION && value == 1)
+                    return variableNodeEvaluated;
+                else if (Operation == Operation.ADDITION && value == 0)
+                    return variableNodeEvaluated;
+            }
+
             if (leftValue == null || rightValue == null)
                 return new OperationNode(Operation, left, right);
 
@@ -101,6 +116,42 @@ namespace MathParser
                     return new ValueNode(leftValue.Value - rightValue.Value);
                 default:
                     return null;
+            }
+        }
+
+        public override Node Transform()
+        {
+            var left = Left.Transform();
+            var right = Right.Transform();
+
+            if (Operation == Operation.SUBTRACTION)
+            {
+                var negativeRight = new OperationNode(Operation.MULTIPLICATION, new ValueNode(-1), right);
+                return new OperationNode(Operation.ADDITION, left, negativeRight);
+            }
+
+            return new OperationNode(Operation, left, right);
+        }
+
+        public bool IsConstantOperation(out float value, out Node variableNode)
+        {
+            if (Left is ValueNode leftValueNode)
+            {
+                value = leftValueNode.Value;
+                variableNode = Right;
+                return true;
+            }
+            else if (Right is ValueNode rightValueNode)
+            {
+                value = rightValueNode.Value;
+                variableNode = Left;
+                return true;
+            }
+            else
+            {
+                value = 0;
+                variableNode = null;
+                return false;
             }
         }
     }
@@ -132,6 +183,16 @@ namespace MathParser
                 return new UnaryOperationNode(Operation, node);
             else
                 return new ValueNode(-valueNode.Value);
+        }
+
+        public override Node Transform()
+        {
+            var node = Node.Transform();
+
+            if (Operation == UnaryOperation.NEGATIVE)
+                return new OperationNode(MathParser.Operation.MULTIPLICATION, new ValueNode(-1), node);
+
+            return new UnaryOperationNode(Operation, node);
         }
     }
 
