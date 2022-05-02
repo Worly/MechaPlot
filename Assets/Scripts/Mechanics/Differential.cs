@@ -17,10 +17,11 @@ public class Differential : MonoBehaviour
     public Gear InputGear2 => inputGear2;
     public Gear OutputGear => correctOutputGear;
 
-    public void Start()
+    public void Awake()
     {
         endGear1.valueChanged.AddListener(UpdateValues);
         endGear2.valueChanged.AddListener(UpdateValues);
+        UpdateValues();
     }
 
     public void UpdateValues()

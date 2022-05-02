@@ -98,7 +98,7 @@ public class OperationGenerator : MonoBehaviour
                     transferGear.Circumference = leftOperator.OutputGear.Circumference;
 
                     leftGear.InputComponent = transferGear;
-                    leftGear.onlyCopyInput = true;
+                    leftGear.OnlyCopyInput = true;
 
                     AddShaft(
                         transferGear.transform.localPosition.x,

@@ -63,7 +63,7 @@ public class MechanismGenerator : MonoBehaviour
             foreach (var xGear in orderedXGears.Skip(1))
             {
                 xGear.InputComponent = orderedXGears.First();
-                xGear.onlyCopyInput = true;
+                xGear.OnlyCopyInput = true;
             }
         }
 
@@ -73,7 +73,7 @@ public class MechanismGenerator : MonoBehaviour
         float zOffset = -3f;
         MoveParentWithChildCoordinates(xGearBox.transform, xGearBox.OutputGear.transform, firstXGear.transform.position + new Vector3(0, 0, zOffset));
         firstXGear.InputComponent = xGearBox.OutputGear;
-        firstXGear.onlyCopyInput = true;
+        firstXGear.OnlyCopyInput = true;
         AddShaft(xGearXPos, 0, firstXGear.transform.localPosition.z + zOffset, firstXGear.transform.localPosition.z);
 
         // add plotter connected to inputCrank and yGearBox output
@@ -114,7 +114,7 @@ public class MechanismGenerator : MonoBehaviour
         var operationGeneratorInput = inputNodes.FirstOrDefault();
 
         operationGeneratorInput.OutputGear.InputComponent = topNodeGenerator.OutputGear;
-        operationGeneratorInput.OutputGear.onlyCopyInput = true;
+        operationGeneratorInput.OutputGear.OnlyCopyInput = true;
         MoveParentWithChildCoordinates(topNodeGenerator.transform, topNodeGenerator.OutputGear.transform, operationGeneratorInput.OutputGear.transform.position + new Vector3(0, 0, -1f));
 
         return operationGenerator;
@@ -138,7 +138,7 @@ public class MechanismGenerator : MonoBehaviour
         xTransferGear.SetPositionGlobal(new Vector3(inputGearXPosition.x, inputGearXPosition.y, inputCrank.transform.position.z));
         xTransferGear.Circumference = inputCrank.Gear.Circumference * 2; // so when crank rotates 10 times, the plotter input is rotated 5 times, and plotter is moved by 50 units
         plotter.InputGearX.InputComponent = xTransferGear;
-        plotter.InputGearX.onlyCopyInput = true;
+        plotter.InputGearX.OnlyCopyInput = true;
         AddShaft(xTransferGear.transform.localPosition.x, xTransferGear.transform.localPosition.y, xTransferGear.transform.localPosition.z, transform.InverseTransformPoint(plotter.InputGearX.transform.position).z);
 
         MakeBeltConnection(inputCrank.Gear, xTransferGear, backSide: true, topSide: false);
@@ -158,7 +158,7 @@ public class MechanismGenerator : MonoBehaviour
         takeBelt.GearMeshGenerator.gearType = GearType.Belt;
         takeBelt.Circumference = 10;
         takeBelt.InputComponent = gearTake;
-        takeBelt.onlyCopyInput = true;
+        takeBelt.OnlyCopyInput = true;
         takeBelt.PlaceNextTo(gearTake, zSide * transform.forward);
 
         var giveBelt = Instantiate(gearPrefab, transform);
@@ -168,7 +168,7 @@ public class MechanismGenerator : MonoBehaviour
         giveBelt.PlaceNextTo(toGear, zSide * transform.forward);
 
         toGear.InputComponent = giveBelt;
-        toGear.onlyCopyInput = true;
+        toGear.OnlyCopyInput = true;
 
         var belt = Instantiate(ropePrefab, transform);
         belt.SetGears(takeBelt, giveBelt);

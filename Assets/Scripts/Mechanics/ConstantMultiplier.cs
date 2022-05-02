@@ -78,7 +78,7 @@ public class ConstantMultiplier : MonoBehaviour
             var firstGear = Instantiate(gearPrefab, transform);
             firstGear.Circumference = (float)firstGearCircumference;
             firstGear.InputComponent = lastGear;
-            firstGear.onlyCopyInput = true;
+            firstGear.OnlyCopyInput = true;
             firstGear.PlaceNextTo(lastGear, transform.forward);
 
             var secondGear = Instantiate(gearPrefab, transform);
@@ -112,7 +112,7 @@ public class ConstantMultiplier : MonoBehaviour
                 var transferGear = Instantiate(gearPrefab, transform);
                 transferGear.Circumference = 25;
                 transferGear.InputComponent = lastGear;
-                transferGear.onlyCopyInput = true;
+                transferGear.OnlyCopyInput = true;
                 transferGear.PlaceNextTo(lastGear, transform.forward);
 
                 lastGear = transferGear;
@@ -127,7 +127,7 @@ public class ConstantMultiplier : MonoBehaviour
         }
 
         outputGear.InputComponent = lastGear;
-        outputGear.onlyCopyInput = true;
+        outputGear.OnlyCopyInput = true;
         outputGear.PlaceNextTo(lastGear, transform.forward);
     }
 

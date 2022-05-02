@@ -44,7 +44,21 @@ public abstract class ValuedComponent : MonoBehaviour
         }
     }
 
-    [SerializeField] public bool onlyCopyInput;
+    [SerializeField] private bool onlyCopyInput;
+    public bool OnlyCopyInput
+    {
+        get => onlyCopyInput;
+        set
+        {
+            if (this.onlyCopyInput == value)
+                return;
+
+            this.onlyCopyInput = value;
+
+            if (this.inputComponent != null)
+                UpdateValue();
+        }
+    }
 
     [HideInInspector] public UnityEvent valueChanged;
 
