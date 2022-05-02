@@ -64,7 +64,7 @@ namespace MathParser
 
         public override string ToString()
         {
-            switch(Operation)
+            switch (Operation)
             {
                 case Operation.POWER:
                     return $"({Left}^{Right})";
@@ -128,6 +128,29 @@ namespace MathParser
             {
                 var negativeRight = new OperationNode(Operation.MULTIPLICATION, new ValueNode(-1), right);
                 return new OperationNode(Operation.ADDITION, left, negativeRight);
+            }
+            else if (Operation == Operation.POWER)
+            {
+                var evaluatedRight = right.Evaluate();
+                var valueNode = evaluatedRight as ValueNode;
+                if (valueNode == null)
+                    throw new ArgumentException("Power cannot contain x!");
+
+                int valueNodeInt = Mathf.RoundToInt(valueNode.Value);
+                if (valueNode.Value != valueNodeInt)
+                    throw new ArgumentException("Power cannot decimal values!");
+
+                if (valueNode.Value < 0)
+                    throw new ArgumentException("Power cannot be negative!");
+
+                if (valueNodeInt == 1)
+                    return left;
+
+                var newNode = new OperationNode(Operation.MULTIPLICATION, left, left);
+                for (int i = 2; i < valueNodeInt; i++)
+                    newNode = new OperationNode(Operation.MULTIPLICATION, newNode, left);
+
+                return newNode;
             }
 
             return new OperationNode(Operation, left, right);
