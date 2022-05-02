@@ -60,6 +60,7 @@ public class SystemGeneratorUI : MonoBehaviour
         catch (Exception e)
         {
             errorText.text = "Error while parsing the function: " + e.Message;
+            Debug.LogError(e);
             return;
         }
 
@@ -70,6 +71,7 @@ public class SystemGeneratorUI : MonoBehaviour
         catch (Exception e)
         {
             errorText.text = "Error while generating mechanism: " + e.Message;
+            Debug.LogError(e);
             return;
         }
     }

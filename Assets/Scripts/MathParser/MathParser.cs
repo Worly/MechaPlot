@@ -70,7 +70,7 @@ namespace MathParser
             return left;
         }
 
-        // T -> P*T | P/T | P
+        // T -> P*T | P/T | PT | P
         private Node ParseTerm()
         {
             var left = ParsePower();
@@ -87,6 +87,16 @@ namespace MathParser
                 var right = ParseTerm();
 
                 return new OperationNode(Operation.DIVISION, left, right);
+            }
+
+            if (index < expression.Length)
+            {
+                var next = GetNext();
+                if (next.Type == UnitType.ARGUMENT || next.Value == "(")
+                {
+                    var right = ParseTerm();
+                    return new OperationNode(Operation.MULTIPLICATION, left, right);
+                }
             }
 
             return left;
@@ -110,6 +120,9 @@ namespace MathParser
         // F -> -F | +F | (E) | a
         private Node ParseFactor()
         {
+            if (index >= expression.Length)
+                throw new SyntaxException("Expected +, -, ( or argument!");
+
             var next = GetNext(true);
 
             if (next.Value == "-")
