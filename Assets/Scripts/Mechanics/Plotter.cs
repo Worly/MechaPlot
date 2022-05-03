@@ -26,8 +26,6 @@ public class Plotter : MonoBehaviour
     public void Start()
     {
         lineRenderer.positionCount = 0;
-        //lineRenderer.positionCount = 1;
-        //lineRenderer.SetPosition(0, GetCurrentPenPosition());
     }
 
     public void Update()
@@ -39,6 +37,9 @@ public class Plotter : MonoBehaviour
             lineRenderer.positionCount++;
             lineRenderer.SetPosition(lineRenderer.positionCount - 1, GetCurrentPenPosition());
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+            lineRenderer.positionCount = 0;
     }
 
     public void GenerateCoordinateSystem(float xFrom, float xTo, float yFrom, float yTo)

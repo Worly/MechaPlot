@@ -16,6 +16,9 @@ public class Crank : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
             stop = !stop;
+
+        if (Input.GetKeyDown(KeyCode.R))
+            gear.Value = 0;
     }
 
     void FixedUpdate()
