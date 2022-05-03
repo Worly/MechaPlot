@@ -51,53 +51,62 @@ namespace MathParser
         private string expression;
         private int index = 0;
 
-        // E -> T+E | T-E | T
+        // E -> T[+|-]T... | T
         private Node ParseExpression()
         {
             var left = ParseTerm();
 
-            if (Match("-"))
+            while (index < expression.Length)
             {
-                var right = ParseExpression();
-                return new OperationNode(Operation.SUBTRACTION, left, right);
-            }
-
-            if (Match("+"))
-            {
-                var right = ParseExpression();
-                return new OperationNode(Operation.ADDITION, left, right);
+                if (Match("-"))
+                {
+                    var right = ParseTerm();
+                    left = new OperationNode(Operation.SUBTRACTION, left, right);
+                }
+                else if (Match("+"))
+                {
+                    var right = ParseTerm();
+                    left = new OperationNode(Operation.ADDITION, left, right);
+                }
+                else
+                    break;
             }
 
             return left;
         }
 
-        // T -> P*T | P/T | PT | P
+        // T -> P[*|/|NULL]P... | P
         private Node ParseTerm()
         {
             var left = ParsePower();
 
-            if (Match("*"))
+            while (index < expression.Length)
             {
-                var right = ParseTerm();
-
-                return new OperationNode(Operation.MULTIPLICATION, left, right);
-            }
-
-            if (Match("/"))
-            {
-                var right = ParseTerm();
-
-                return new OperationNode(Operation.DIVISION, left, right);
-            }
-
-            if (index < expression.Length)
-            {
-                var next = GetNext();
-                if (next.Type == UnitType.ARGUMENT || next.Value == "(")
+                if (Match("*"))
                 {
-                    var right = ParseTerm();
-                    return new OperationNode(Operation.MULTIPLICATION, left, right);
+                    var right = ParsePower();
+
+                    left = new OperationNode(Operation.MULTIPLICATION, left, right);
                 }
+                else if (Match("/"))
+                {
+                    var right = ParsePower();
+
+                    left = new OperationNode(Operation.DIVISION, left, right);
+                }
+                else if (index < expression.Length)
+                {
+                    var next = GetNext();
+                    if (next.Type == UnitType.ARGUMENT || next.Value == "(")
+                    {
+                        var right = ParsePower();
+                        left = new OperationNode(Operation.MULTIPLICATION, left, right);
+                    }
+                    else
+                        break;
+                }
+                else
+                    break;
             }
 
             return left;
