@@ -14,6 +14,8 @@ public class SystemGeneratorUI : MonoBehaviour
     [SerializeField] private InputField yToInputField;
 
     [SerializeField] private Text errorText;
+    [SerializeField] private Color errorColor;
+    [SerializeField] private Color warningColor;
 
     [SerializeField] private MechanismGenerator systemGenerator;
 
@@ -41,13 +43,13 @@ public class SystemGeneratorUI : MonoBehaviour
 
         if (xFrom >= xTo)
         {
-            errorText.text = "Plotter range X 'from' must be less than 'to'!";
+            SetError("Plotter range X 'from' must be less than 'to'!");
             return;
         }
 
         if (yFrom >= yTo)
         {
-            errorText.text = "Plotter range Y 'from' must be less than 'to'!";
+            SetError("Plotter range Y 'from' must be less than 'to'!");
             return;
         }
 
@@ -59,20 +61,51 @@ public class SystemGeneratorUI : MonoBehaviour
         }
         catch (Exception e)
         {
-            errorText.text = "Error while parsing the function: " + e.Message;
+            SetError("Error while parsing the function: " + e.Message);
             Debug.LogError(e);
             return;
         }
 
-        expressionTopNode = expressionTopNode.LimitMultiplication(xFrom, xTo);
+        try
+        {
+            expressionTopNode = expressionTopNode.LimitMultiplication(xFrom, xTo);
+        }
+        catch (Exception e)
+        {
+            SetError("Error while limiting multiplication: " + e.Message);
+            Debug.LogError(e);
+            return;
+        }
+
 
         try
         {
+            expressionTopNode.FindExtremes(xFrom, xTo);
+
+            bool changedRange = false;
+
+            if (expressionTopNode.MinValue < yFrom)
+            {
+                yFrom = expressionTopNode.MinValue;
+                yFromInputField.text = yFrom.ToString();
+                changedRange = true;
+            }
+
+            if (expressionTopNode.MaxValue > yTo)
+            {
+                yTo = expressionTopNode.MaxValue;
+                yToInputField.text = yTo.ToString();
+                changedRange = true;
+            }
+
+            if (changedRange)
+                SetWarning("Warning: Y range changed to maximum and minimum of a function!");
+
             systemGenerator.Generate(expressionTopNode, xFrom, xTo, yFrom, yTo);
         }
         catch (Exception e)
         {
-            errorText.text = "Error while generating mechanism: " + e.Message;
+            SetError("Error while generating mechanism: " + e.Message);
             Debug.LogError(e);
             return;
         }
@@ -82,7 +115,7 @@ public class SystemGeneratorUI : MonoBehaviour
     {
         if (string.IsNullOrEmpty(value))
         {
-            errorText.text = $"{name} cannot be empty!";
+            SetError($"{name} cannot be empty!");
             return true;
         }
 
@@ -97,10 +130,22 @@ public class SystemGeneratorUI : MonoBehaviour
 
         if(!float.TryParse(s, out value))
         {
-            errorText.text = $"{name} must be a decimal number!";
+            SetError($"{name} must be a decimal number!");
             return true;
         }
 
         return false;
+    }
+
+    private void SetError(string error)
+    {
+        errorText.text = error;
+        errorText.color = errorColor;
+    }
+
+    private void SetWarning(string warning)
+    {
+        errorText.text = warning;
+        errorText.color = warningColor;
     }
 }

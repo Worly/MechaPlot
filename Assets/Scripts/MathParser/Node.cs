@@ -9,6 +9,11 @@ namespace MathParser
 {
     public abstract class Node
     {
+        public float MaxValue { get; private set; }
+        public float MinValue { get; private set; }
+        public float MaxAbsoluteValue { get; private set; }
+        public float MinAbsoluteValue { get; private set; }
+
         public virtual Node Evaluate(float? x = null)
         {
             return this;
@@ -24,18 +29,31 @@ namespace MathParser
             return this;
         }
 
-        public float FindMaxValue(float xFrom, float xTo)
+        public void FindExtremes(float xFrom, float xTo)
         {
             float xRange = xTo - xFrom;
             float xStep = xRange * ((Crank.crankSpeed * Time.fixedDeltaTime) / Crank.valueLimit);
 
-            float maxValue = 0;
+            MaxValue = float.MinValue;
+            MinValue = float.MaxValue;
+            MaxAbsoluteValue = 0;
+            MinAbsoluteValue = float.MaxValue;
+
+
             float x = xFrom;
             do
             {
-                var absValue = Mathf.Abs((this.Evaluate(x) as ValueNode).Value);
-                if (absValue > maxValue)
-                    maxValue = absValue;
+                var value = (this.Evaluate(x) as ValueNode).Value;
+                if (value > MaxValue)
+                    MaxValue = value;
+                if (value < MinValue)
+                    MinValue = value;
+
+                var absValue = Mathf.Abs(value);
+                if (absValue > MaxAbsoluteValue)
+                    MaxAbsoluteValue = absValue;
+                if (absValue < MinAbsoluteValue)
+                    MinAbsoluteValue = absValue;
 
                 if (x == xTo)
                     break;
@@ -46,8 +64,6 @@ namespace MathParser
                     x = xTo;
 
             } while (x <= xTo);
-
-            return maxValue;
         }
     }
 
@@ -203,8 +219,11 @@ namespace MathParser
             if (Operation != Operation.MULTIPLICATION || IsConstantOperation(out _, out _))
                 return new OperationNode(Operation, limitedLeft, limitedRight);
 
-            var leftMax = limitedLeft.FindMaxValue(xFrom, xTo);
-            var rightMax = limitedRight.FindMaxValue(xFrom, xTo);
+            limitedLeft.FindExtremes(xFrom, xTo);
+            limitedRight.FindExtremes(xFrom, xTo);
+
+            var leftMax = limitedLeft.MaxAbsoluteValue;
+            var rightMax = limitedRight.MaxAbsoluteValue;
 
             // return leftMax * rightMax * ((limitedLeft / leftMax) * (limitedRight / rightMax))
             return new OperationNode(Operation.MULTIPLICATION, new ValueNode(leftMax * rightMax), // leftMax * rightMax *

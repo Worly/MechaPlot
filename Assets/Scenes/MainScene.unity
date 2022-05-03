@@ -1032,6 +1032,7 @@ GameObject:
   - component: {fileID: 445217247}
   - component: {fileID: 445217249}
   - component: {fileID: 445217248}
+  - component: {fileID: 445217250}
   m_Layer: 5
   m_Name: ErrorText
   m_TagString: Untagged
@@ -1071,7 +1072,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.06003024, b: 0.06003024, a: 1}
+  m_Color: {r: 1, g: 0.8271605, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1100,6 +1101,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 445217246}
   m_CullTransparentMesh: 1
+--- !u!114 &445217250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445217246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 0.5, y: -0.5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &477700697
 GameObject:
   m_ObjectHideFlags: 0
@@ -2413,6 +2429,8 @@ MonoBehaviour:
   yFromInputField: {fileID: 2115386362}
   yToInputField: {fileID: 4169793}
   errorText: {fileID: 445217248}
+  errorColor: {r: 1, g: 0, b: 0, a: 1}
+  warningColor: {r: 1, g: 0.827451, b: 0, a: 1}
   systemGenerator: {fileID: 2103388837}
 --- !u!1 &1434024933
 GameObject:
