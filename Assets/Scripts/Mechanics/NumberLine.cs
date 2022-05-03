@@ -68,6 +68,12 @@ public class NumberLine : MonoBehaviour
             var valueText = Instantiate(textPrefab, transform);
             valueText.text = (fromValue + divisionDelta * i).ToString("0.##");
             valueText.transform.localPosition = tickPos + secondDirection * (mainTickLen + 0.8f);
+
+            if (direction == Direction.Vertical)
+            {
+                valueText.alignment = TextAlignmentOptions.Left;
+                valueText.rectTransform.localPosition += new Vector3(valueText.rectTransform.sizeDelta.x / 2f - 0.5f, 0, 0);
+            }
         }
 
         // Add arrow
