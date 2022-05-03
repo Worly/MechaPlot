@@ -5,25 +5,28 @@ using UnityEngine;
 public class Crank : MonoBehaviour
 {
     [SerializeField] private Gear gear;
-    [SerializeField] private float crankSpeed;
 
-    private float valueLimit = 10;
+    public static readonly float crankSpeed = 0.5f;
+    public static readonly float valueLimit = 10;
     private bool stop = true;
 
     public Gear Gear => gear;
 
-    void Update()
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+            stop = !stop;
+    }
+
+    void FixedUpdate()
     {
         if (!stop)
         {
-            var newValue = gear.Value + crankSpeed * Time.deltaTime;
+            var newValue = gear.Value + crankSpeed * Time.fixedDeltaTime;
             if (newValue > valueLimit)
                 newValue = valueLimit;
 
             gear.Value = newValue;
         }
-
-        if (Input.GetKeyDown(KeyCode.G))
-            stop = !stop;
     }
 }

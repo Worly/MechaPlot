@@ -9,7 +9,7 @@ namespace MathParser
 {
     public abstract class Node
     {
-        public virtual Node Evaluate()
+        public virtual Node Evaluate(float? x = null)
         {
             return this;
         }
@@ -17,6 +17,37 @@ namespace MathParser
         public virtual Node Transform()
         {
             return this;
+        }
+
+        public virtual Node LimitMultiplication(float xFrom, float xTo)
+        {
+            return this;
+        }
+
+        public float FindMaxValue(float xFrom, float xTo)
+        {
+            float xRange = xTo - xFrom;
+            float xStep = xRange * ((Crank.crankSpeed * Time.fixedDeltaTime) / Crank.valueLimit);
+
+            float maxValue = 0;
+            float x = xFrom;
+            do
+            {
+                var absValue = Mathf.Abs((this.Evaluate(x) as ValueNode).Value);
+                if (absValue > maxValue)
+                    maxValue = absValue;
+
+                if (x == xTo)
+                    break;
+
+                x += xStep;
+
+                if (x > xTo)
+                    x = xTo;
+
+            } while (x <= xTo);
+
+            return maxValue;
         }
     }
 
@@ -45,6 +76,14 @@ namespace MathParser
         public override string ToString()
         {
             return "x";
+        }
+
+        public override Node Evaluate(float? x = null)
+        {
+            if (x == null)
+                return this;
+            else
+                return new ValueNode(x.Value);
         }
     }
 
@@ -81,10 +120,10 @@ namespace MathParser
             }
         }
 
-        public override Node Evaluate()
+        public override Node Evaluate(float? x = null)
         {
-            var left = Left.Evaluate();
-            var right = Right.Evaluate();
+            var left = Left.Evaluate(x);
+            var right = Right.Evaluate(x);
 
             var leftValue = left as ValueNode;
             var rightValue = right as ValueNode;
@@ -156,6 +195,26 @@ namespace MathParser
             return new OperationNode(Operation, left, right);
         }
 
+        public override Node LimitMultiplication(float xFrom, float xTo)
+        {
+            var limitedLeft = Left.LimitMultiplication(xFrom, xTo);
+            var limitedRight = Right.LimitMultiplication(xFrom, xTo);
+
+            if (Operation != Operation.MULTIPLICATION || IsConstantOperation(out _, out _))
+                return new OperationNode(Operation, limitedLeft, limitedRight);
+
+            var leftMax = limitedLeft.FindMaxValue(xFrom, xTo);
+            var rightMax = limitedRight.FindMaxValue(xFrom, xTo);
+
+            // return leftMax * rightMax * ((limitedLeft / leftMax) * (limitedRight / rightMax))
+            return new OperationNode(Operation.MULTIPLICATION, new ValueNode(leftMax * rightMax), // leftMax * rightMax *
+                new OperationNode(Operation.MULTIPLICATION, // ( * )
+                    new OperationNode(Operation.MULTIPLICATION, limitedLeft, new ValueNode(1f / leftMax)), // limitedLeft / leftMax
+                    new OperationNode(Operation.MULTIPLICATION, limitedRight, new ValueNode(1f / rightMax)) // limitedRight / rightMax
+                    )
+                );
+        }
+
         public bool IsConstantOperation(out float value, out Node variableNode)
         {
             if (Left is ValueNode leftValueNode)
@@ -196,9 +255,9 @@ namespace MathParser
             return $"-{Node}";
         }
 
-        public override Node Evaluate()
+        public override Node Evaluate(float? x = null)
         {
-            var node = Node.Evaluate();
+            var node = Node.Evaluate(x);
 
             var valueNode = node as ValueNode;
 

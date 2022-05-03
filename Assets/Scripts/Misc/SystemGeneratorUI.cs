@@ -64,6 +64,8 @@ public class SystemGeneratorUI : MonoBehaviour
             return;
         }
 
+        expressionTopNode = expressionTopNode.LimitMultiplication(xFrom, xTo);
+
         try
         {
             systemGenerator.Generate(expressionTopNode, xFrom, xTo, yFrom, yTo);
