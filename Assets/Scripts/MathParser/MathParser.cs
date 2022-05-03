@@ -127,7 +127,7 @@ namespace MathParser
             return left;
         }
 
-        // F -> -F | +F | (E) | a
+        // F -> -T | +T | (E) | a
         private Node ParseFactor()
         {
             if (index >= expression.Length)
@@ -137,13 +137,13 @@ namespace MathParser
 
             if (next.Value == "-")
             {
-                var node = ParseFactor();
+                var node = ParseTerm();
                 return new UnaryOperationNode(UnaryOperation.NEGATIVE, node);
             }
 
             if (next.Value == "+")
             {
-                var node = ParseFactor();
+                var node = ParseTerm();
                 return node;
             }
 
