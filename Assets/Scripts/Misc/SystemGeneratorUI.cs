@@ -87,19 +87,17 @@ public class SystemGeneratorUI : MonoBehaviour
             if (expressionTopNode.MinValue < yFrom)
             {
                 yFrom = expressionTopNode.MinValue;
-                yFromInputField.text = yFrom.ToString();
                 changedRange = true;
             }
 
             if (expressionTopNode.MaxValue > yTo)
             {
                 yTo = expressionTopNode.MaxValue;
-                yToInputField.text = yTo.ToString();
                 changedRange = true;
             }
 
             if (changedRange)
-                SetWarning("Warning: Y range changed to maximum and minimum of a function!");
+                SetWarning($"Warning: Y range changed to [{yFrom}, {yTo}] so that value doesn't overflow!");
 
             systemGenerator.Generate(expressionTopNode, xFrom, xTo, yFrom, yTo);
         }
