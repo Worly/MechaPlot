@@ -84,7 +84,7 @@ public class MechanismGenerator : MonoBehaviour
 
     private OperationGenerator CreateXGearBox(float xFrom, float xTo, out Crank inputCrank)
     {
-        var formula = $"-(-x * {(xTo - xFrom) / 10f} + {xFrom})";
+        var formula = $"-(-x * {(decimal)((xTo - xFrom) / 10f)} + {(decimal)xFrom})";
         var topNode = MathParser.Parser.Parse(formula);
 
         var inputNodes = new List<OperationGenerator>();
@@ -104,7 +104,7 @@ public class MechanismGenerator : MonoBehaviour
     {
         var center = (yFrom + yTo) / 2f;
         var delta = yTo - yFrom;
-        var formula = $"(x - {center}) * {1 / (delta) * 5f}"; // * 5f because of plotter gear ratios
+        var formula = $"(x - {(decimal)center}) * {(decimal)(1 / (delta) * 5f)}"; // * 5f because of plotter gear ratios
         var topNode = MathParser.Parser.Parse(formula);
 
         var inputNodes = new List<OperationGenerator>();
