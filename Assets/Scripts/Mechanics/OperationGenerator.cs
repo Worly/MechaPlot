@@ -7,11 +7,10 @@ public class OperationGenerator : MonoBehaviour
 {
     [Header("Prefabs")]
     [SerializeField] private Gear gearPrefab;
-    [SerializeField] private Crank crankPrefab;
     [SerializeField] private Differential differentialPrefab;
     [SerializeField] private Multiplier multiplierPrefab;
+    [SerializeField] private Divider dividerPrefab;
     [SerializeField] private ConstantMultiplier constantMultiplierPrefab;
-    [SerializeField] private Rope ropePrefab;
     [SerializeField] private GameObject shaftPrefab;
 
     public Gear OutputGear { get; private set; }
@@ -40,6 +39,12 @@ public class OperationGenerator : MonoBehaviour
                 var nodeGenerator = Instantiate(operationGeneratorPrefab, transform);
                 nodeGenerator.Generate(variableNode, operationGeneratorPrefab, ref inputNodes);
                 GenerateConstantMultiplier(constant, nodeGenerator);
+            }
+            else if (operationNode.Operation == Operation.DIVISION && (operationNode.Left as ValueNode)?.Value == 1)
+            {
+                var nodeGenerator = Instantiate(operationGeneratorPrefab, transform);
+                nodeGenerator.Generate(operationNode.Right, operationGeneratorPrefab, ref inputNodes);
+                GenerateDivider(nodeGenerator);
             }
             else
             {
@@ -126,6 +131,19 @@ public class OperationGenerator : MonoBehaviour
         MoveChildForGearMeshing(constantMultiplier.InputGear, nodeGenerator.transform, nodeGenerator.OutputGear);
 
         this.OutputGear = constantMultiplier.OutputGear;
+    }
+
+    private void GenerateDivider(OperationGenerator nodeGenerator)
+    {
+        var divider = Instantiate(dividerPrefab, transform);
+        divider.transform.localPosition = Vector3.zero;
+
+        divider.InputGear.InputComponent = nodeGenerator.OutputGear;
+        divider.InputGear.Circumference = nodeGenerator.OutputGear.Circumference;
+
+        MoveChildForGearMeshing(divider.InputGear, nodeGenerator.transform, nodeGenerator.OutputGear);
+
+        this.OutputGear = divider.OutputGear;
     }
 
     public static void MoveChildForGearMeshing(Gear parentGear, Transform childTransform, Gear childGear)

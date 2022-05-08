@@ -29,6 +29,11 @@ namespace MathParser
             return this;
         }
 
+        public virtual Node LimitDivision(float xFrom, float xTo)
+        {
+            return this;
+        }
+
         public void FindExtremes(float xFrom, float xTo)
         {
             float xRange = xTo - xFrom;
@@ -207,6 +212,11 @@ namespace MathParser
 
                 return newNode;
             }
+            else if (Operation == Operation.DIVISION)
+            {
+                var reciprocalRight = new OperationNode(Operation.DIVISION, new ValueNode(1), right);
+                return new OperationNode(Operation.MULTIPLICATION, left, reciprocalRight);
+            }
 
             return new OperationNode(Operation, left, right);
         }
@@ -229,6 +239,37 @@ namespace MathParser
             return new OperationNode(Operation.MULTIPLICATION, new ValueNode(leftMax * rightMax), // leftMax * rightMax *
                 new OperationNode(Operation.MULTIPLICATION, // ( * )
                     new OperationNode(Operation.MULTIPLICATION, limitedLeft, new ValueNode(1f / leftMax)), // limitedLeft / leftMax
+                    new OperationNode(Operation.MULTIPLICATION, limitedRight, new ValueNode(1f / rightMax)) // limitedRight / rightMax
+                    )
+                );
+        }
+
+        public override Node LimitDivision(float xFrom, float xTo)
+        {
+            var limitedLeft = Left.LimitDivision(xFrom, xTo);
+            var limitedRight = Right.LimitDivision(xFrom, xTo);
+
+            if (Operation != Operation.DIVISION)
+                return new OperationNode(Operation, limitedLeft, limitedRight);
+
+            if ((limitedLeft as ValueNode)?.Value != 1)
+                throw new Exception("Division must only be reciprocal!");
+
+            limitedRight.FindExtremes(xFrom, xTo);
+
+            if (limitedRight.MinAbsoluteValue == 0 || 
+                (limitedRight.MinValue < 0 && limitedRight.MaxValue > 0))
+                throw new Exception("Division by zero is not allowed!");
+
+            var rightMax = limitedRight.MaxAbsoluteValue;
+            // division must be limited between 0.1 and 1
+            if (limitedRight.MinAbsoluteValue / rightMax < 0.1)
+                throw new Exception($"Division is out of physically possible range! Divisors max value({limitedRight.MaxAbsoluteValue}) must be 10 or less times bigger than its min value({limitedRight.MinAbsoluteValue}), but its {limitedRight.MaxAbsoluteValue / limitedRight.MinAbsoluteValue} times bigger!");
+
+            // return (1 / rightMax) * (1 / (limitedRight / rightMax))
+            return new OperationNode(Operation.MULTIPLICATION, new ValueNode(1f / rightMax), // rightMax *
+                new OperationNode(Operation.DIVISION, // ( / )
+                    new ValueNode(1), // 1
                     new OperationNode(Operation.MULTIPLICATION, limitedRight, new ValueNode(1f / rightMax)) // limitedRight / rightMax
                     )
                 );

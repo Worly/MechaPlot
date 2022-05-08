@@ -28,8 +28,6 @@ public class Divider : MonoBehaviour
         var pivotArmPosition = this.transform.InverseTransformPoint(rackPivotArm.position);
         var pivotPointPosition = this.transform.InverseTransformPoint(pivotPoint.position);
         kValue = pivotPointPosition.x - pivotArmPosition.x;
-
-        Debug.Log("kValue: " + kValue);
     }
 
     public void Update()

@@ -77,6 +77,16 @@ public class SystemGeneratorUI : MonoBehaviour
             return;
         }
 
+        try
+        {
+            expressionTopNode = expressionTopNode.LimitDivision(xFrom, xTo);
+        }
+        catch (Exception e)
+        {
+            SetError("Error while limiting division: " + e.Message);
+            Debug.LogError(e);
+            return;
+        }
 
         try
         {

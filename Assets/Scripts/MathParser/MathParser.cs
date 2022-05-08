@@ -35,6 +35,7 @@ namespace MathParser
             // remove subtractions: (x - 2 = x + (-1 * 2)) or (2 - x = 2 + (-1 * x))
             // remove negative unary operation: (-x = -1 * x)
             // remove power: (x^3 = x * x * x) also throw exception if power is not removable
+            // remove divisions: (x / x = x * (1/x))
             topNode = topNode.Transform();
 
             // simplify (ex. x * 2 * 2 = x * 4)

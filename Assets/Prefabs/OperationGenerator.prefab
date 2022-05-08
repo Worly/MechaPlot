@@ -47,7 +47,7 @@ MonoBehaviour:
   crankPrefab: {fileID: 3213750243429588970, guid: 6e3d0610806d7f947a18115c3f3049fc, type: 3}
   differentialPrefab: {fileID: 1073980497, guid: c5380d794d8ee1d449a4d729b8bf605d, type: 3}
   multiplierPrefab: {fileID: 331735603, guid: d40f98f6a92f59746a1abc1028ee970f, type: 3}
+  dividerPrefab: {fileID: 346352403324005000, guid: 30fd6e562331f094387a9e7d63041693, type: 3}
   constantMultiplierPrefab: {fileID: 2189924976048742252, guid: 3641eb1ddfa744449bd4def71c96cba3, type: 3}
   ropePrefab: {fileID: 6632231247782226687, guid: 890fe0278205a8648a9d31d754e9c223, type: 3}
   shaftPrefab: {fileID: 1878719316459364591, guid: a27789ec38428ef4cb8c8d26947c7b34, type: 3}
-  operationGeneratorPrefab: {fileID: 4806767421608477021}
