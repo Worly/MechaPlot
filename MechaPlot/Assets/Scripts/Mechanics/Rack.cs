@@ -62,11 +62,4 @@ public class Rack : ValuedComponent
 
         return 0;
     }
-
-    public Vector3 GetPositionOfEdge(Vector3 direction)
-    {
-        var globalPosition = this.transform.TransformPoint(this.startPosition);
-
-        return globalPosition + direction * (rackMeshGenerator.width / 2f);
-    }
 }
