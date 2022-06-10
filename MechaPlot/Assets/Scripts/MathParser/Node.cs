@@ -78,7 +78,7 @@ namespace MathParser
 
         public ValueNode(string value)
         {
-            this.Value = float.Parse(value);
+            this.Value = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
         }
 
         public ValueNode(float value)

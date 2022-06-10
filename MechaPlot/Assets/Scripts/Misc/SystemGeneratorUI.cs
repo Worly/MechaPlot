@@ -136,7 +136,7 @@ public class SystemGeneratorUI : MonoBehaviour
         if (ValidateEmpty(s, name))
             return true;
 
-        if(!float.TryParse(s, out value))
+        if(!float.TryParse(s, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out value))
         {
             SetError($"{name} must be a decimal number!");
             return true;
